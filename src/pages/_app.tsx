@@ -1,7 +1,12 @@
 import "@/styles/globals.css";
+import "@/lib/firebase";
 import type { AppProps } from "next/app";
-import { app } from "@/lib/firebase";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
+
 export default function App({ Component, pageProps }: AppProps) {
-  console.log(app);
-  return <Component {...pageProps} />;
+  return (
+    <AuthProvider>
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }

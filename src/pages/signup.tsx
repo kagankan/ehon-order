@@ -8,10 +8,12 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
-const emailName = "email";
-const passwordName = "password";
+const emailId = "email";
+const passwordId = "password";
 
 export default function SignUp() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -21,16 +23,7 @@ export default function SignUp() {
     setErrorMessage("");
     setIsLoading(true);
 
-    const form = event.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const email = formData.get(emailName);
-    const password = formData.get(passwordName);
-
     try {
-      if (typeof email !== "string" || typeof password !== "string") {
-        throw new Error("email or password is not string");
-      }
-
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -71,12 +64,13 @@ export default function SignUp() {
               "
               >
                 <div className="grid gap-2">
-                  <label htmlFor={emailName} className="">
+                  <label htmlFor={emailId} className="">
                     メールアドレス
                   </label>
                   <input
-                    id={emailName}
-                    name={emailName}
+                    id={emailId}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
                     required
                     type="email"
@@ -84,12 +78,13 @@ export default function SignUp() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <label htmlFor={passwordName} className="">
+                  <label htmlFor={passwordId} className="">
                     パスワード（6文字以上）
                   </label>
                   <input
-                    id={passwordName}
-                    name={passwordName}
+                    id={passwordId}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
                     type="password"
                     required
@@ -101,7 +96,9 @@ export default function SignUp() {
               <button
                 disabled={isLoading}
                 className="
-                w-full mt-8 px-4 py-2 text-base font-medium text-white bg-slate-600 rounded-md hover:bg-slate-700
+                w-full mt-8 px-4 py-2 text-base font-medium text-white bg-slate-600 rounded-md
+                hover:bg-slate-700
+                disabled:bg-gray-300 disabled:cursor-not-allowed
               "
               >
                 登録
