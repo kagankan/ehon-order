@@ -6,7 +6,8 @@
 
 - React
 - Next.js
-- CSS modules
+- Tailwind CSS
+  - GitHub Copilotのサポートを受けてデザインを作りやすいため。
 - Cloud Firestore
 - Firebase Authentication
 
@@ -20,3 +21,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## 参考
+
+https://zenn.dev/hisho/books/617d8f9d6bd78b
