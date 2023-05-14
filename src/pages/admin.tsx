@@ -15,6 +15,7 @@ export default function Admin() {
       router.push("/login");
     } catch (e) {
       if (e instanceof FirebaseError) {
+        // eslint-disable-next-line no-console
         console.log(e);
       }
     }

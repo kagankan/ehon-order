@@ -25,9 +25,11 @@ export default function Login() {
     try {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
+      // eslint-disable-next-line no-console
       console.log("login success");
       router.push("/admin");
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
       if (e instanceof FirebaseError) {
         setErrorMessage(e.message);
