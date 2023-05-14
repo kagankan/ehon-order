@@ -3,6 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
+import { useAuthContext } from "@/features/auth/context/AuthContext";
 
 const emailId = "email";
 const passwordId = "password";
@@ -14,6 +15,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  const user = useAuthContext();
+
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
@@ -23,7 +26,7 @@ export default function Login() {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
       console.log("login success");
-      // router.push("/signup-completed");
+      router.push("/admin");
     } catch (e) {
       console.log(e);
       if (e instanceof FirebaseError) {
@@ -43,6 +46,7 @@ export default function Login() {
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
           <div className="flex flex-col items-center justify-center w-full px-4 py-8 bg-white shadow-md max-w-lg sm:rounded-lg sm:px-10">
             <h2 className="text-3xl font-extrabold text-gray-900">ログイン</h2>
+            {user && <p className="mt-4 text-red-500">ログイン済みです</p>}
             {errorMessage && (
               <p aria-live="polite" className="mt-4 text-red-500">
                 {errorMessage}
@@ -94,6 +98,7 @@ export default function Login() {
                   >
                     ログイン
                   </button>
+
                   {/* <a
                     className="inline-block right-0 align-baseline font-bold text-sm text-500 hover:text-blue-800"
                     href="#"
