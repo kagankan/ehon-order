@@ -1,11 +1,10 @@
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { FormEvent, useState } from "react";
-import { app } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 
 const storage = getStorage();
-const db = getFirestore(app);
 
 export default function Add() {
   const [name, setName] = useState<string>("");
