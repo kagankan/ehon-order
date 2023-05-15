@@ -1,6 +1,7 @@
 import { FirebaseError } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
 
@@ -35,6 +36,14 @@ export default function Admin() {
               </h2>
               <div className="mt-6 leading-loose text-gray-600">
                 <p>管理画面です。</p>
+                <Link
+                  href="/admin/add"
+                  className="
+                  mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
+                "
+                >
+                  商品追加
+                </Link>
                 <button
                   className="mt-4 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                   onClick={logOut}
