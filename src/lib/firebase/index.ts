@@ -1,5 +1,6 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 import {
   FIREBASE_API_KEY,
   FIREBASE_APP_ID,
@@ -23,3 +24,4 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
+export const db = getFirestore(app);

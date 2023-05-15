@@ -33,5 +33,6 @@ module.exports =
         },
       ],
       "react/react-in-jsx-scope": "off",
+      "@next/next/no-img-element": "off",
     },
   });
