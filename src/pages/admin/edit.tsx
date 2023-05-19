@@ -51,11 +51,6 @@ export default function Edit() {
     setErrorMessage("");
     setIsLoading(true);
 
-    if (!imageFile) {
-      setErrorMessage("画像を選択してください");
-      return;
-    }
-
     if (!id) {
       setErrorMessage("idがありません");
       return;
@@ -65,14 +60,16 @@ export default function Edit() {
       return;
     }
 
-    // まずStorageに画像をアップロード
-    const uploadResult = await uploadBytes(ref(storage, imagePath), imageFile);
+    // 画像を更新する場合
+    if (imageFile) {
+      await uploadBytes(ref(storage, imagePath), imageFile);
+    }
 
     // 続いてFirestoreにデータを保存
     await setDoc(doc(db, "books", id), {
       name: name,
       price: price,
-      image: uploadResult.metadata.fullPath,
+      image: imagePath,
     });
 
     setIsLoading(false);
@@ -147,7 +144,10 @@ export default function Edit() {
                   <button
                     className=" px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed "
                     disabled={
-                      isLoading || name === "" || price === "" || !imageFile
+                      isLoading ||
+                      name === "" ||
+                      price === "" ||
+                      !(imageFile || imagePath)
                     }
                   >
                     更新
