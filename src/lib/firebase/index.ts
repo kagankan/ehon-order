@@ -1,6 +1,7 @@
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import {
   FIREBASE_API_KEY,
   FIREBASE_APP_ID,
@@ -25,3 +26,4 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 export const db = getFirestore(app);
+export const storage = getStorage();
