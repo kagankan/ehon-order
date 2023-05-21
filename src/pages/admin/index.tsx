@@ -4,11 +4,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { AdminLayout } from "@/features/admin/components/AdminLayout";
 import { bookConverter } from "@/features/book/firestore";
 import { formatPrice, taxIn } from "@/features/book/functions";
 import { Book } from "@/features/book/types";
 import { db, storage } from "@/lib/firebase";
-import { AdminLayout } from "./_components/AdminLayout";
 
 export default function Admin() {
   const [allBooks, setAllBooks] = useState<
