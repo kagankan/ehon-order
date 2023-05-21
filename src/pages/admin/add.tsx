@@ -38,7 +38,7 @@ export default function Add() {
       await addDoc(collection(db, "books").withConverter(bookConverter), {
         name: name,
         price: Number(price),
-        image: uploadResult.metadata.fullPath,
+        imagePath: uploadResult.metadata.fullPath,
       });
 
       setIsLoading(false);

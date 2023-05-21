@@ -10,7 +10,7 @@ import { db } from "@/lib/firebase";
 const storage = getStorage();
 
 export default function Home() {
-  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [allBooks, setAllBooks] = useState<(Book & { imageUrl: string })[]>([]);
 
   useEffect(() => {
     void (async () => {
@@ -20,9 +20,9 @@ export default function Home() {
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();
-          const imagePath = data.image;
+          const imagePath = data.imagePath;
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          return { ...data, image: downloadUrl };
+          return { ...data, imageUrl: downloadUrl };
         })
       );
       setAllBooks(list);
@@ -50,10 +50,10 @@ export default function Home() {
                     fallbackRender={() => <p>Error</p>}
                   >
                     <li className="col-span-1 flex gap-4 divide-gray-200 rounded-lg bg-white p-4 shadow">
-                      {book.image && (
+                      {book.imageUrl && (
                         <img
                           className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
-                          src={book.image}
+                          src={book.imageUrl}
                           alt=""
                           width={128}
                           height={128}

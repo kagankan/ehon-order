@@ -43,7 +43,7 @@ export default function Edit() {
         if (bookData) {
           setName(bookData.name);
           setPrice(String(bookData.price));
-          const imagePath = bookData.image;
+          const imagePath = bookData.imagePath;
           setImagePath(imagePath);
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
           setImageUrl(downloadUrl);
@@ -74,10 +74,10 @@ export default function Edit() {
       }
 
       // 続いてFirestoreにデータを保存
-      await setDoc(doc(db, "books", id), {
+      await setDoc(doc(db, "books", id).withConverter(bookConverter), {
         name: name,
-        price: price,
-        image: imagePath,
+        price: Number(price),
+        imagePath: imagePath,
       });
 
       setIsLoading(false);

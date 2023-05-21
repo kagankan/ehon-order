@@ -15,9 +15,9 @@ import { db, storage } from "@/lib/firebase";
 export default function Admin() {
   const user = useAuthContext();
   const router = useRouter();
-  const [allBooks, setAllBooks] = useState<Readonly<Book & { id: string }>[]>(
-    []
-  );
+  const [allBooks, setAllBooks] = useState<
+    Readonly<Book & { id: string; imageUrl: string }>[]
+  >([]);
 
   useEffect(() => {
     void (async () => {
@@ -27,11 +27,11 @@ export default function Admin() {
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();
-          const imagePath = data.image;
+          const imagePath = data.imagePath;
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
           return {
             ...data,
-            image: downloadUrl,
+            imageUrl: downloadUrl,
             id: doc.id,
           };
         })
@@ -90,10 +90,10 @@ export default function Admin() {
                       fallbackRender={() => <p>Error</p>}
                     >
                       <li className="col-span-1 flex gap-4 divide-gray-200 rounded-lg bg-white p-4 shadow">
-                        {book.image && (
+                        {book.imageUrl && (
                           <img
                             className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
-                            src={book.image}
+                            src={book.imageUrl}
                             alt=""
                             width={128}
                             height={128}
