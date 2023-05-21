@@ -8,46 +8,51 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { bookConverter } from "@/features/book/firestore";
+import { Book } from "@/features/book/types";
 import { db, storage } from "@/lib/firebase";
-
-type Book = {
-  id: string;
-  name?: string;
-  price?: number;
-  image?: string;
-};
 
 export default function Admin() {
   const user = useAuthContext();
   const router = useRouter();
-  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [allBooks, setAllBooks] = useState<
+    Readonly<Book & { id: string; imageUrl: string }>[]
+  >([]);
 
   useEffect(() => {
-    (async () => {
-      const querySnapshot = await getDocs(collection(db, "books"));
+    void (async () => {
+      const querySnapshot = await getDocs(
+        collection(db, "books").withConverter(bookConverter)
+      );
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();
-          const imagePath = data.image;
+          const imagePath = data.imagePath;
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          return { ...data, image: downloadUrl, id: doc.id };
+          return {
+            ...data,
+            imageUrl: downloadUrl,
+            id: doc.id,
+          };
         })
       );
       setAllBooks(list);
     })();
   }, []);
 
-  const logOut = async () => {
-    try {
-      const auth = getAuth();
-      await signOut(auth);
-      router.push("/login");
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        // eslint-disable-next-line no-console
-        console.log(e);
+  const logOut = () => {
+    void (async () => {
+      try {
+        const auth = getAuth();
+        await signOut(auth);
+        await router.push("/login");
+      } catch (e) {
+        if (e instanceof FirebaseError) {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        }
       }
-    }
+    })();
   };
 
   return (
@@ -56,8 +61,8 @@ export default function Admin() {
         <title>管理画面</title>
       </Head>
       {user && (
-        <main className="bg-gray-200 min-h-screen">
-          <div className="w-[80%] max-w-7xl mx-auto">
+        <main className="min-h-screen bg-gray-200">
+          <div className="mx-auto w-[80%] max-w-7xl">
             <div className="py-8">
               <h1 className="text-3xl font-extrabold text-gray-900">
                 管理画面
@@ -66,13 +71,13 @@ export default function Admin() {
                 <Link
                   href="/admin/add"
                   className="
-                  mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
+                  mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
                 "
                 >
                   商品追加
                 </Link>
                 <button
-                  className="mt-4 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                  className="mt-4 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
                   onClick={logOut}
                 >
                   ログアウト
@@ -84,23 +89,26 @@ export default function Admin() {
                       key={index}
                       fallbackRender={() => <p>Error</p>}
                     >
-                      <li className="col-span-1 flex gap-4 bg-white rounded-lg shadow p-4 divide-gray-200">
-                        {book.image && (
+                      <li className="col-span-1 flex gap-4 divide-gray-200 rounded-lg bg-white p-4 shadow">
+                        {book.imageUrl && (
                           <img
-                            className="w-32 h-32 flex-shrink-0 mx-auto object-contain"
-                            src={book.image}
+                            className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
+                            src={book.imageUrl}
                             alt=""
+                            width={128}
+                            height={128}
+                            decoding="async"
                           />
                         )}
                         <div className="grow">
-                          <h2 className="mt-6 text-gray-900 text-lg font-medium">
+                          <h2 className="mt-6 text-lg font-medium text-gray-900">
                             {book.name}
                           </h2>
                           <p className="mt-1 text-gray-500">{book.price}円</p>
                           <Link
                             href={`/admin/edit?id=${book.id}`}
                             className="
-                          mt-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
+                          mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
                           "
                           >
                             編集
