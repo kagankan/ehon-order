@@ -59,7 +59,7 @@ export default function Home() {
             >
               <div
                 className="
-                  h-32 w-32 animate-spin rounded-full border-b-2 border-gray-900
+                  h-32 w-32 animate-spin rounded-full border-8 border-white border-t-transparent
                 "
               ></div>
               <p className="mt-4 text-gray-900">読み込み中...</p>
