@@ -1,4 +1,4 @@
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, doc, deleteDoc } from "firebase/firestore";
 import { getDownloadURL, ref } from "firebase/storage";
 import Head from "next/head";
 import Link from "next/link";
@@ -13,6 +13,7 @@ export default function Admin() {
   const [allBooks, setAllBooks] = useState<
     Readonly<Book & { id: string; imageUrl: string }>[]
   >([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     void (async () => {
@@ -40,6 +41,19 @@ export default function Admin() {
       setAllBooks(list);
     })();
   }, []);
+
+  const deleteBook = async (id: string) => {
+    setIsLoading(true);
+    const targetBook = allBooks.find((book) => book.id === id);
+    if (
+      targetBook &&
+      window.confirm(`「${targetBook?.name}」を削除しますか？`)
+    ) {
+      await deleteDoc(doc(db, "books", id));
+      setAllBooks(allBooks.filter((book) => book.id !== id));
+    }
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -79,14 +93,29 @@ export default function Admin() {
                         {book.name}
                       </h2>
                       <p className="mt-1 text-gray-500">{book.price}円</p>
-                      <Link
-                        href={`/admin/edit?id=${book.id}`}
+                      <div
                         className="
-                          mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
-                          "
+                      mt-6 flex justify-end gap-4
+                      "
                       >
-                        編集
-                      </Link>
+                        <Link
+                          href={`/admin/edit?id=${book.id}`}
+                          className="
+                          rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
+                          "
+                        >
+                          編集
+                        </Link>
+                        <button
+                          disabled={isLoading}
+                          className="
+                        rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
+                        "
+                          onClick={() => void deleteBook(book.id)}
+                        >
+                          削除
+                        </button>
+                      </div>
                     </div>
                   </li>
                 </ErrorBoundary>

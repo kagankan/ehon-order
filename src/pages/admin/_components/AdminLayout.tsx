@@ -16,9 +16,9 @@ export const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="flex min-h-screen">
+      <div className="flex flex-grow">
         <nav className="flex flex-col border-r border-gray-200 bg-white py-4">
           <Link
             href="/admin"
@@ -34,6 +34,6 @@ export const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
           <div className="mx-auto w-[80%] max-w-7xl">{children}</div>
         </main>
       </div>
-    </>
+    </div>
   );
 };
