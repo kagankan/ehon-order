@@ -3,9 +3,9 @@ import { ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
+import { AdminLayout } from "@/features/admin/components/AdminLayout";
 import { bookConverter } from "@/features/book/firestore";
 import { db, storage } from "@/lib/firebase";
-import { AdminLayout } from "./_components/AdminLayout";
 
 const nameId = "name";
 const priceId = "price";
