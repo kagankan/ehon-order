@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { bookConverter } from "@/features/book/firestore";
+import { formatPrice, taxIn } from "@/features/book/functions";
 import { Book } from "@/features/book/types";
 import { db, storage } from "@/lib/firebase";
 import { AdminLayout } from "./_components/AdminLayout";
@@ -73,14 +74,14 @@ export default function Admin() {
               商品追加
             </Link>
           </div>
-          <div className="mt-6 leading-loose text-gray-600">
+          <div className="mt-6 text-gray-600">
             <ul className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {allBooks.map((book, index) => (
                 <ErrorBoundary key={index} fallbackRender={() => <p>Error</p>}>
                   <li className="col-span-1 flex gap-4 divide-gray-200 rounded-lg bg-white p-4 shadow">
                     {book.imageUrl && (
                       <img
-                        className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
+                        className="mx-auto h-32 w-32 flex-shrink-0 rounded object-contain"
                         src={book.imageUrl}
                         alt=""
                         width={128}
@@ -89,13 +90,16 @@ export default function Admin() {
                       />
                     )}
                     <div className="grow">
-                      <h2 className="mt-6 text-lg font-medium text-gray-900">
+                      <h2 className="text-xl font-bold leading-loose text-gray-900">
                         {book.name}
                       </h2>
-                      <p className="mt-1 text-gray-500">{book.price}円</p>
+                      <div className="mt-1">
+                        <p>本体価格: {formatPrice(book.price)}円</p>
+                        <p>税込み: {formatPrice(taxIn(book.price))}円</p>
+                      </div>
                       <div
                         className="
-                      mt-6 flex justify-end gap-4
+                      mt-2 flex justify-end gap-4
                       "
                       >
                         <Link
