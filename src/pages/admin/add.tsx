@@ -2,6 +2,7 @@ import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { FormEvent, useState } from "react";
+import { bookConverter } from "@/features/book/firestore";
 import { db, storage } from "@/lib/firebase";
 
 export default function Add() {
@@ -30,9 +31,9 @@ export default function Add() {
       );
 
       // 続いてFirestoreにデータを保存
-      await addDoc(collection(db, "books"), {
+      await addDoc(collection(db, "books").withConverter(bookConverter), {
         name: name,
-        price: price,
+        price: Number(price),
         image: uploadResult.metadata.fullPath,
       });
 

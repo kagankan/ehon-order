@@ -3,13 +3,9 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { bookConverter } from "@/features/book/firestore";
+import { Book } from "@/features/book/types";
 import { db } from "@/lib/firebase";
-
-type Book = Partial<{
-  name: string;
-  price: number;
-  image: string;
-}>;
 
 const storage = getStorage();
 
@@ -18,7 +14,9 @@ export default function Home() {
 
   useEffect(() => {
     void (async () => {
-      const querySnapshot = await getDocs(collection(db, "books"));
+      const querySnapshot = await getDocs(
+        collection(db, "books").withConverter(bookConverter)
+      );
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();

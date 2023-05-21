@@ -3,6 +3,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
+import { bookConverter } from "@/features/book/firestore";
 import { db, storage } from "@/lib/firebase";
 
 export default function Edit() {
@@ -30,12 +31,14 @@ export default function Edit() {
     }
 
     const fetchBook = async () => {
-      const bookDoc = await getDoc(doc(db, "books", id));
+      const bookDoc = await getDoc(
+        doc(db, "books", id).withConverter(bookConverter)
+      );
       if (bookDoc.exists()) {
         const bookData = bookDoc.data();
         if (bookData) {
           setName(bookData.name);
-          setPrice(bookData.price);
+          setPrice(String(bookData.price));
           const imagePath = bookData.image;
           setImagePath(imagePath);
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
@@ -43,7 +46,7 @@ export default function Edit() {
         }
       }
     };
-    fetchBook();
+    void fetchBook();
   }, [id]);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {

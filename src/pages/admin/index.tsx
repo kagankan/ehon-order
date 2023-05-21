@@ -8,14 +8,9 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { bookConverter } from "@/features/book/firestore";
+import { Book } from "@/features/book/types";
 import { db, storage } from "@/lib/firebase";
-
-type Book = {
-  id: string;
-  name?: string;
-  price?: number;
-  image?: string;
-};
 
 export default function Admin() {
   const user = useAuthContext();
@@ -24,7 +19,9 @@ export default function Admin() {
 
   useEffect(() => {
     void (async () => {
-      const querySnapshot = await getDocs(collection(db, "books"));
+      const querySnapshot = await getDocs(
+        collection(db, "books").withConverter(bookConverter)
+      );
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
           const data = doc.data();
