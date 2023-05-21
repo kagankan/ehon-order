@@ -14,6 +14,7 @@ module.exports =
       "next/core-web-vitals",
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
       "plugin:jsx-a11y/recommended",
@@ -35,4 +36,14 @@ module.exports =
       "react/react-in-jsx-scope": "off",
       "@next/next/no-img-element": "off",
     },
+    overrides: [
+      {
+        files: ["**/*.ts", "**/*.tsx"],
+        parser: "@typescript-eslint/parser",
+        parserOptions: {
+          sourceType: "module",
+          project: "./tsconfig.json",
+        },
+      },
+    ],
   });

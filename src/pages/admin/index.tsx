@@ -23,7 +23,7 @@ export default function Admin() {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const querySnapshot = await getDocs(collection(db, "books"));
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {
@@ -37,17 +37,19 @@ export default function Admin() {
     })();
   }, []);
 
-  const logOut = async () => {
-    try {
-      const auth = getAuth();
-      await signOut(auth);
-      router.push("/login");
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        // eslint-disable-next-line no-console
-        console.log(e);
+  const logOut = () => {
+    void (async () => {
+      try {
+        const auth = getAuth();
+        await signOut(auth);
+        await router.push("/login");
+      } catch (e) {
+        if (e instanceof FirebaseError) {
+          // eslint-disable-next-line no-console
+          console.log(e);
+        }
       }
-    }
+    })();
   };
 
   return (

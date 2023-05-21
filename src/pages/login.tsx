@@ -17,26 +17,28 @@ export default function Login() {
 
   const user = useAuthContext();
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
 
-    try {
-      const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
-      // eslint-disable-next-line no-console
-      console.log("login success");
-      router.push("/admin");
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-      if (e instanceof FirebaseError) {
-        setErrorMessage(e.message);
+    void (async () => {
+      try {
+        const auth = getAuth();
+        await signInWithEmailAndPassword(auth, email, password);
+        // eslint-disable-next-line no-console
+        console.log("login success");
+        await router.push("/admin");
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e);
+        if (e instanceof FirebaseError) {
+          setErrorMessage(e.message);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
+    })();
   };
 
   return (

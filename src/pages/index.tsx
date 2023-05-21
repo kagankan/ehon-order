@@ -17,7 +17,7 @@ export default function Home() {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       const querySnapshot = await getDocs(collection(db, "books"));
       const list = await Promise.all(
         querySnapshot.docs.map(async (doc) => {

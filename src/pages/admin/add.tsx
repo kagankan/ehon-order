@@ -11,7 +11,7 @@ export default function Add() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
@@ -21,21 +21,23 @@ export default function Add() {
       return;
     }
 
-    // まずStorageに画像をアップロード
-    const uuid = self.crypto.randomUUID();
-    const uploadResult = await uploadBytes(
-      ref(storage, `/images/${uuid}-${imageFile.name}`),
-      imageFile
-    );
+    void (async () => {
+      // まずStorageに画像をアップロード
+      const uuid = self.crypto.randomUUID();
+      const uploadResult = await uploadBytes(
+        ref(storage, `/images/${uuid}-${imageFile.name}`),
+        imageFile
+      );
 
-    // 続いてFirestoreにデータを保存
-    await addDoc(collection(db, "books"), {
-      name: name,
-      price: price,
-      image: uploadResult.metadata.fullPath,
-    });
+      // 続いてFirestoreにデータを保存
+      await addDoc(collection(db, "books"), {
+        name: name,
+        price: price,
+        image: uploadResult.metadata.fullPath,
+      });
 
-    setIsLoading(false);
+      setIsLoading(false);
+    })();
   };
 
   return (

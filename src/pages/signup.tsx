@@ -18,27 +18,29 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
 
-    try {
-      const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await sendEmailVerification(userCredential.user);
-      router.push("/signup-completed");
-    } catch (e) {
-      if (e instanceof FirebaseError) {
-        setErrorMessage(e.message);
+    void (async () => {
+      try {
+        const auth = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        await sendEmailVerification(userCredential.user);
+        await router.push("/signup-completed");
+      } catch (e) {
+        if (e instanceof FirebaseError) {
+          setErrorMessage(e.message);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
-      setIsLoading(false);
-    }
+    })();
   };
 
   return (

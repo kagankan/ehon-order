@@ -46,7 +46,7 @@ export default function Edit() {
     fetchBook();
   }, [id]);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
     setIsLoading(true);
@@ -60,19 +60,21 @@ export default function Edit() {
       return;
     }
 
-    // 画像を更新する場合
-    if (imageFile) {
-      await uploadBytes(ref(storage, imagePath), imageFile);
-    }
+    void (async () => {
+      // 画像を更新する場合
+      if (imageFile) {
+        await uploadBytes(ref(storage, imagePath), imageFile);
+      }
 
-    // 続いてFirestoreにデータを保存
-    await setDoc(doc(db, "books", id), {
-      name: name,
-      price: price,
-      image: imagePath,
-    });
+      // 続いてFirestoreにデータを保存
+      await setDoc(doc(db, "books", id), {
+        name: name,
+        price: price,
+        image: imagePath,
+      });
 
-    setIsLoading(false);
+      setIsLoading(false);
+    })();
   };
 
   return (
