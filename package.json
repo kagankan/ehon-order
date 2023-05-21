@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint; stylelint 'src/**/*.css'; cspell 'src/**/*' --no-progress; markuplint 'src/**/*.{jsx,tsx}'"
+    "lint": "next lint; stylelint 'src/**/*.css'; cspell 'src/**/*' --no-progress; markuplint 'src/**/*.{jsx,tsx}'",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css}'"
   },
   "dependencies": {
     "@types/node": "20.1.4",
@@ -31,6 +32,8 @@
     "cspell": "^6.31.1",
     "eslint-config-prettier": "^8.8.0",
     "markuplint": "^3.10.0",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "stylelint": "^15.6.1",
     "stylelint-config-recess-order": "^4.0.0",
     "stylelint-use-logical": "^2.1.0"

@@ -6,9 +6,9 @@ export default function SignUpCompleted() {
       <Head>
         <title>アカウント登録完了</title>
       </Head>
-      <main className="bg-gray-200 min-h-screen">
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-          <div className="flex flex-col items-center justify-center w-full px-4 py-8 bg-white shadow-md max-w-lg sm:rounded-lg sm:px-10">
+      <main className="min-h-screen bg-gray-200">
+        <div className="flex min-h-screen flex-col items-center justify-center py-2">
+          <div className="flex w-full max-w-lg flex-col items-center justify-center bg-white px-4 py-8 shadow-md sm:rounded-lg sm:px-10">
             <h2 className="text-3xl font-extrabold text-gray-900">
               アカウント登録完了
             </h2>

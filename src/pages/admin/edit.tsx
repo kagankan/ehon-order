@@ -80,16 +80,16 @@ export default function Edit() {
       <Head>
         <title>編集</title>
       </Head>
-      <main className="bg-gray-200 min-h-screen">
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-          <div className="flex flex-col items-center justify-center w-full px-4 py-8 bg-white shadow-md max-w-md sm:rounded-lg sm:px-10">
+      <main className="min-h-screen bg-gray-200">
+        <div className="flex min-h-screen flex-col items-center justify-center py-2">
+          <div className="flex w-full max-w-md flex-col items-center justify-center bg-white px-4 py-8 shadow-md sm:rounded-lg sm:px-10">
             <h2 className="text-3xl font-extrabold text-gray-900">編集</h2>
             <div className="mt-6 leading-loose text-gray-600">
               <form className="w-full max-w-lg" onSubmit={onSubmit}>
-                <div className="flex flex-wrap -mx-3 mb-6">
+                <div className="-mx-3 mb-6 flex flex-wrap">
                   <div className="w-full px-3">
                     <label
-                      className="block mb-2 text-sm font-bold text-gray-700"
+                      className="mb-2 block text-sm font-bold text-gray-700"
                       htmlFor="name"
                     >
                       商品名
@@ -97,14 +97,14 @@ export default function Edit() {
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
                       id="name"
                       type="text"
                       placeholder="商品名"
                     />
 
                     <label
-                      className="block mb-2 text-sm font-bold text-gray-700"
+                      className="mb-2 block text-sm font-bold text-gray-700"
                       htmlFor="image"
                     >
                       商品画像
@@ -112,10 +112,10 @@ export default function Edit() {
                     <img
                       src={imageUrl}
                       alt="商品画像のプレビュー"
-                      className="w-32 h-32 object-contain"
+                      className="h-32 w-32 object-contain"
                     />
                     <input
-                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
                       id="image"
                       type="file"
                       onChange={(e) => {
@@ -127,13 +127,13 @@ export default function Edit() {
                     />
 
                     <label
-                      className="block mb-2 text-sm font-bold text-gray-700"
+                      className="mb-2 block text-sm font-bold text-gray-700"
                       htmlFor="name"
                     >
                       価格
                     </label>
                     <input
-                      className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                      className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
                       id="name"
                       type="number"
                       value={price}
@@ -142,7 +142,7 @@ export default function Edit() {
                     />
                   </div>
                   <button
-                    className=" px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed "
+                    className=" focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 "
                     disabled={
                       isLoading ||
                       name === "" ||

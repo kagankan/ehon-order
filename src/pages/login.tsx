@@ -44,9 +44,9 @@ export default function Login() {
       <Head>
         <title>ログイン</title>
       </Head>
-      <main className="bg-gray-200 min-h-screen">
-        <div className="flex flex-col items-center justify-center min-h-screen py-2">
-          <div className="flex flex-col items-center justify-center w-full px-4 py-8 bg-white shadow-md max-w-lg sm:rounded-lg sm:px-10">
+      <main className="min-h-screen bg-gray-200">
+        <div className="flex min-h-screen flex-col items-center justify-center py-2">
+          <div className="flex w-full max-w-lg flex-col items-center justify-center bg-white px-4 py-8 shadow-md sm:rounded-lg sm:px-10">
             <h2 className="text-3xl font-extrabold text-gray-900">ログイン</h2>
             {user && <p className="mt-4 text-red-500">ログイン済みです</p>}
             {errorMessage && (
@@ -54,7 +54,7 @@ export default function Login() {
                 {errorMessage}
               </p>
             )}
-            <div className="w-full mt-6 leading-loose text-gray-600">
+            <div className="mt-6 w-full leading-loose text-gray-600">
               <form className="" onSubmit={onSubmit}>
                 <div className="mt-2">
                   <label
@@ -64,7 +64,7 @@ export default function Login() {
                     メールアドレス
                   </label>
                   <input
-                    className="w-full p-2 text-gray-700 border border-slate-400 rounded"
+                    className="w-full rounded border border-slate-400 p-2 text-gray-700"
                     id={emailId}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -82,7 +82,7 @@ export default function Login() {
                     パスワード
                   </label>
                   <input
-                    className="w-full p-2 text-gray-700 border border-slate-400 rounded"
+                    className="w-full rounded border border-slate-400 p-2 text-gray-700"
                     id={passwordId}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -94,7 +94,7 @@ export default function Login() {
                 </div>
                 <div className="mt-4 items-center justify-between">
                   <button
-                    className="w-full px-4 py-1 text-white font-light tracking-wider bg-gray-900 rounded disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-gray-700"
+                    className="w-full rounded bg-gray-900 px-4 py-1 font-light tracking-wider text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                     type="submit"
                     disabled={isLoading}
                   >
