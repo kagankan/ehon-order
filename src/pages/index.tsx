@@ -55,6 +55,9 @@ export default function Home() {
                           className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
                           src={book.image}
                           alt=""
+                          width={128}
+                          height={128}
+                          decoding="async"
                         />
                       )}
                       <div className="grow">

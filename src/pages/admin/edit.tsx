@@ -6,6 +6,10 @@ import { FormEvent, useEffect, useState } from "react";
 import { bookConverter } from "@/features/book/firestore";
 import { db, storage } from "@/lib/firebase";
 
+const nameId = "name";
+const priceId = "price";
+const imageId = "image";
+
 export default function Edit() {
   const router = useRouter();
   const { id } = router.query;
@@ -95,7 +99,7 @@ export default function Edit() {
                   <div className="w-full px-3">
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="name"
+                      htmlFor={nameId}
                     >
                       商品名
                     </label>
@@ -103,14 +107,14 @@ export default function Edit() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="name"
+                      id={nameId}
                       type="text"
                       placeholder="商品名"
                     />
 
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="image"
+                      htmlFor={imageId}
                     >
                       商品画像
                     </label>
@@ -118,10 +122,13 @@ export default function Edit() {
                       src={imageUrl}
                       alt="商品画像のプレビュー"
                       className="h-32 w-32 object-contain"
+                      width={128}
+                      height={128}
+                      decoding="async"
                     />
                     <input
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="image"
+                      id={imageId}
                       type="file"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -133,13 +140,13 @@ export default function Edit() {
 
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="name"
+                      htmlFor={priceId}
                     >
                       価格
                     </label>
                     <input
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="name"
+                      id={priceId}
                       type="number"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}

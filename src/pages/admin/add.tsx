@@ -5,6 +5,10 @@ import { FormEvent, useState } from "react";
 import { bookConverter } from "@/features/book/firestore";
 import { db, storage } from "@/lib/firebase";
 
+const nameId = "name";
+const priceId = "price";
+const imageId = "image";
+
 export default function Add() {
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<string>("");
@@ -56,7 +60,7 @@ export default function Add() {
                   <div className="w-full px-3">
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="name"
+                      htmlFor={nameId}
                     >
                       商品名
                     </label>
@@ -64,33 +68,33 @@ export default function Add() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="name"
+                      id={nameId}
                       type="text"
                       placeholder="商品名"
                     />
 
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="image"
+                      htmlFor={imageId}
                     >
                       商品画像
                     </label>
                     <input
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="image"
+                      id={imageId}
                       type="file"
                       onChange={(e) => setImageFile(e.target.files?.[0])}
                     />
 
                     <label
                       className="mb-2 block text-sm font-bold text-gray-700"
-                      htmlFor="name"
+                      htmlFor={priceId}
                     >
                       価格
                     </label>
                     <input
                       className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 text-sm leading-tight text-gray-700 shadow focus:outline-none"
-                      id="name"
+                      id={priceId}
                       type="number"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}

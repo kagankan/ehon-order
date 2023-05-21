@@ -15,7 +15,9 @@ import { db, storage } from "@/lib/firebase";
 export default function Admin() {
   const user = useAuthContext();
   const router = useRouter();
-  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [allBooks, setAllBooks] = useState<Readonly<Book & { id: string }>[]>(
+    []
+  );
 
   useEffect(() => {
     void (async () => {
@@ -27,7 +29,11 @@ export default function Admin() {
           const data = doc.data();
           const imagePath = data.image;
           const downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          return { ...data, image: downloadUrl, id: doc.id };
+          return {
+            ...data,
+            image: downloadUrl,
+            id: doc.id,
+          };
         })
       );
       setAllBooks(list);
@@ -89,6 +95,9 @@ export default function Admin() {
                             className="mx-auto h-32 w-32 flex-shrink-0 object-contain"
                             src={book.image}
                             alt=""
+                            width={128}
+                            height={128}
+                            decoding="async"
                           />
                         )}
                         <div className="grow">
