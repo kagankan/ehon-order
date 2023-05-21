@@ -32,7 +32,7 @@ export default function SignUp() {
           password
         );
         await sendEmailVerification(userCredential.user);
-        await router.push("/signup-completed");
+        await router.push("/signup/completed");
       } catch (e) {
         if (e instanceof FirebaseError) {
           setErrorMessage(e.message);

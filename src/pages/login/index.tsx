@@ -16,6 +16,9 @@ export default function Login() {
   const router = useRouter();
 
   const user = useAuthContext();
+  if (user) {
+    void router.push("/admin");
+  }
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,16 +49,11 @@ export default function Login() {
       <Head>
         <title>ログイン</title>
       </Head>
+
       <main className="min-h-screen bg-gray-200">
         <div className="flex min-h-screen flex-col items-center justify-center py-2">
           <div className="flex w-full max-w-lg flex-col items-center justify-center bg-white px-4 py-8 shadow-md sm:rounded-lg sm:px-10">
             <h2 className="text-3xl font-extrabold text-gray-900">ログイン</h2>
-            {user && <p className="mt-4 text-red-500">ログイン済みです</p>}
-            {errorMessage && (
-              <p aria-live="polite" className="mt-4 text-red-500">
-                {errorMessage}
-              </p>
-            )}
             <div className="mt-6 w-full leading-loose text-gray-600">
               <form className="" onSubmit={onSubmit}>
                 <div className="mt-2">
@@ -102,7 +100,13 @@ export default function Login() {
                   >
                     ログイン
                   </button>
-
+                  <p
+                    aria-live="polite"
+                    aria-atomic="true"
+                    className="mt-4 text-red-500 empty:mt-0"
+                  >
+                    {errorMessage}
+                  </p>
                   {/* <a
                     className="inline-block right-0 align-baseline font-bold text-sm text-500 hover:text-blue-800"
                     href="#"
