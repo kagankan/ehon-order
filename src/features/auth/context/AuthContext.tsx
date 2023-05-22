@@ -9,12 +9,13 @@ import {
   useState,
 } from "react";
 
-type AuthContextType = User | null;
+type AuthContextType = User | null | undefined;
+const DEFAULT_VALUE: AuthContextType = undefined;
 
-const AuthContext = createContext<AuthContextType>(null);
+const AuthContext = createContext<AuthContextType>(DEFAULT_VALUE);
 
 const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthContextType>(null);
+  const [user, setUser] = useState<AuthContextType>(DEFAULT_VALUE);
 
   useEffect(() => {
     const auth = getAuth();
