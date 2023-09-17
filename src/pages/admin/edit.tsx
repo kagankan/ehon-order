@@ -12,6 +12,9 @@ const priceId = "price";
 const imageId = "image";
 const writtenById = "writtenBy";
 const illustratedById = "illustratedBy";
+const publisherId = "publisher";
+const DEFAULT_IMAGE_URL =
+  "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
 
 export default function Edit() {
   const router = useRouter();
@@ -24,6 +27,7 @@ export default function Edit() {
   const [imagePath, setImagePath] = useState<string>("");
   const [writtenBy, setWrittenBy] = useState<string>("");
   const [illustratedBy, setIllustratedBy] = useState<string>("");
+  const [publisher, setPublisher] = useState<string>("");
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -46,24 +50,18 @@ export default function Edit() {
       if (bookDoc.exists()) {
         const bookData = bookDoc.data();
         if (bookData) {
-          const {
-            name,
-            price,
-            imagePath,
-            writtenBy = "",
-            illustratedBy = "",
-          } = bookData;
-          setName(name);
-          setPrice(String(price));
-          setWrittenBy(writtenBy);
-          setIllustratedBy(illustratedBy);
-          const DEFAULT_IMAGE_URL =
-            "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
-          if (imagePath) {
-            setImagePath(imagePath);
+          setName(bookData.name);
+          setPrice(String(bookData.price));
+          bookData.writtenBy && setWrittenBy(bookData.writtenBy);
+          bookData.illustratedBy && setIllustratedBy(bookData.illustratedBy);
+          bookData.publisher && setPublisher(bookData.publisher);
+          if (bookData.imagePath) {
+            setImagePath(bookData.imagePath);
             let downloadUrl: string;
             try {
-              downloadUrl = await getDownloadURL(ref(storage, imagePath));
+              downloadUrl = await getDownloadURL(
+                ref(storage, bookData.imagePath)
+              );
             } catch (error) {
               downloadUrl = DEFAULT_IMAGE_URL;
             }
@@ -104,6 +102,7 @@ export default function Edit() {
         imagePath: imagePath,
         writtenBy: writtenBy,
         illustratedBy: illustratedBy,
+        publisher: publisher,
       });
       setIsLoading(false);
     })();
@@ -204,6 +203,22 @@ export default function Edit() {
                   type="text"
                 />
               </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={publisherId}
+                >
+                  出版社
+                </label>
+                <input
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={publisherId}
+                  type="text"
+                />
+              </div>
+
               <button
                 className="focus:shadow-outline ml-auto block rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 "
                 disabled={isLoading || name === "" || price === ""}

@@ -83,7 +83,9 @@ export default function Home() {
                       <h2 className="text-xl font-medium text-gray-900">
                         {book.name}
                       </h2>
-                      {(book.writtenBy || book.illustratedBy) && (
+                      {(book.writtenBy ||
+                        book.illustratedBy ||
+                        book.publisher) && (
                         <div className="mt-2">
                           {book.writtenBy && (
                             <p className="text-gray-500">作:{book.writtenBy}</p>
@@ -91,6 +93,11 @@ export default function Home() {
                           {book.illustratedBy && (
                             <p className="text-gray-500">
                               絵:{book.illustratedBy}
+                            </p>
+                          )}
+                          {book.publisher && (
+                            <p className="text-gray-500">
+                              出版:{book.publisher}
                             </p>
                           )}
                         </div>

@@ -6,4 +6,6 @@ export type Book = {
   writtenBy?: string;
   /** 絵 */
   illustratedBy?: string;
+  /** 出版社 */
+  publisher?: string;
 };
