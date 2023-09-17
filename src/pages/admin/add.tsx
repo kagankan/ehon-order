@@ -10,6 +10,8 @@ import { db, storage } from "@/lib/firebase";
 const nameId = "name";
 const priceId = "price";
 const imageId = "image";
+const writtenById = "writtenBy";
+const illustratedById = "illustratedBy";
 
 export default function Add() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export default function Add() {
   const [price, setPrice] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null | undefined>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [writtenBy, setWrittenBy] = useState<string>("");
+  const [illustratedBy, setIllustratedBy] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -25,24 +29,24 @@ export default function Add() {
     setErrorMessage("");
     setIsLoading(true);
 
-    if (!imageFile) {
-      setErrorMessage("画像を選択してください");
-      return;
-    }
-
     void (async () => {
-      // まずStorageに画像をアップロード
-      const uuid = self.crypto.randomUUID();
-      const uploadResult = await uploadBytes(
-        ref(storage, `/images/${uuid}-${imageFile.name}`),
-        imageFile
-      );
+      let uploadResult;
+      if (imageFile) {
+        // まずStorageに画像をアップロード
+        const uuid = self.crypto.randomUUID();
+        uploadResult = await uploadBytes(
+          ref(storage, `/images/${uuid}-${imageFile.name}`),
+          imageFile
+        );
+      }
 
       // 続いてFirestoreにデータを保存
       await addDoc(collection(db, "books").withConverter(bookConverter), {
         name: name,
         price: Number(price),
-        imagePath: uploadResult.metadata.fullPath,
+        ...(uploadResult ? { imagePath: uploadResult.metadata.fullPath } : {}),
+        writtenBy: writtenBy,
+        illustratedBy: illustratedBy,
       });
 
       setIsLoading(false);
@@ -73,9 +77,7 @@ export default function Add() {
                   className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                   id={nameId}
                   type="text"
-                  placeholder="商品名"
                 />
-
                 <label
                   className="mb-2 block font-bold text-gray-700"
                   htmlFor={imageId}
@@ -116,14 +118,41 @@ export default function Add() {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="本体価格"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={writtenById}
+                >
+                  著者
+                </label>
+                <input
+                  value={writtenBy}
+                  onChange={(e) => setWrittenBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={writtenById}
+                  type="text"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={illustratedById}
+                >
+                  絵
+                </label>
+                <input
+                  value={illustratedBy}
+                  onChange={(e) => setIllustratedBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={illustratedById}
+                  type="text"
                 />
               </div>
               <button
                 className="focus:shadow-outline ml-auto block rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 "
-                disabled={
-                  isLoading || name === "" || price === "" || !imageFile
-                }
+                disabled={isLoading || name === "" || price === ""}
               >
                 登録
               </button>

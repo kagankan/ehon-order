@@ -10,6 +10,8 @@ import { db, storage } from "@/lib/firebase";
 const nameId = "name";
 const priceId = "price";
 const imageId = "image";
+const writtenById = "writtenBy";
+const illustratedById = "illustratedBy";
 
 export default function Edit() {
   const router = useRouter();
@@ -20,11 +22,13 @@ export default function Edit() {
   const [imageFile, setImageFile] = useState<File | null | undefined>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imagePath, setImagePath] = useState<string>("");
+  const [writtenBy, setWrittenBy] = useState<string>("");
+  const [illustratedBy, setIllustratedBy] = useState<string>("");
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // get data from firestore
+  // 現在のデータを読み込み
   useEffect(() => {
     if (!id) {
       setErrorMessage("idがありません");
@@ -42,18 +46,31 @@ export default function Edit() {
       if (bookDoc.exists()) {
         const bookData = bookDoc.data();
         if (bookData) {
-          setName(bookData.name);
-          setPrice(String(bookData.price));
-          const imagePath = bookData.imagePath;
-          setImagePath(imagePath);
-          let downloadUrl: string;
-          try {
-            downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          } catch (error) {
-            downloadUrl =
-              "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
+          const {
+            name,
+            price,
+            imagePath,
+            writtenBy = "",
+            illustratedBy = "",
+          } = bookData;
+          setName(name);
+          setPrice(String(price));
+          setWrittenBy(writtenBy);
+          setIllustratedBy(illustratedBy);
+          const DEFAULT_IMAGE_URL =
+            "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
+          if (imagePath) {
+            setImagePath(imagePath);
+            let downloadUrl: string;
+            try {
+              downloadUrl = await getDownloadURL(ref(storage, imagePath));
+            } catch (error) {
+              downloadUrl = DEFAULT_IMAGE_URL;
+            }
+            setImageUrl(downloadUrl);
+          } else {
+            setImageUrl(DEFAULT_IMAGE_URL);
           }
-          setImageUrl(downloadUrl);
         }
       }
     };
@@ -85,8 +102,9 @@ export default function Edit() {
         name: name,
         price: Number(price),
         imagePath: imagePath,
+        writtenBy: writtenBy,
+        illustratedBy: illustratedBy,
       });
-
       setIsLoading(false);
     })();
   };
@@ -114,7 +132,6 @@ export default function Edit() {
                   className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                   id={nameId}
                   type="text"
-                  placeholder="商品名"
                 />
 
                 <label
@@ -155,17 +172,41 @@ export default function Edit() {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="本体価格"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={writtenById}
+                >
+                  著者
+                </label>
+                <input
+                  value={writtenBy}
+                  onChange={(e) => setWrittenBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={writtenById}
+                  type="text"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={illustratedById}
+                >
+                  絵
+                </label>
+                <input
+                  value={illustratedBy}
+                  onChange={(e) => setIllustratedBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={illustratedById}
+                  type="text"
                 />
               </div>
               <button
                 className="focus:shadow-outline ml-auto block rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 "
-                disabled={
-                  isLoading ||
-                  name === "" ||
-                  price === "" ||
-                  !(imageFile || imagePath)
-                }
+                disabled={isLoading || name === "" || price === ""}
               >
                 更新
               </button>
