@@ -95,10 +95,12 @@ export default function Home() {
                           )}
                         </div>
                       )}
-                      <p className="mt-2">
-                        {formatPrice(taxIn(book.price))}円
-                        <span className="text-sm">（税込み）</span>
-                      </p>
+                      {book.price && (
+                        <p className="mt-2">
+                          {formatPrice(taxIn(book.price))}円
+                          <span className="text-sm">（税込み）</span>
+                        </p>
+                      )}
                     </div>
                   </li>
                 </ErrorBoundary>

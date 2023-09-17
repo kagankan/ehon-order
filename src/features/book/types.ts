@@ -1,6 +1,6 @@
 export type Book = {
   name: string;
-  price: number;
+  price?: number;
   imagePath?: string;
   /** 作 */
   writtenBy?: string;
