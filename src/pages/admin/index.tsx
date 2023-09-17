@@ -93,10 +93,12 @@ export default function Admin() {
                       <h2 className="text-xl font-bold leading-loose text-gray-900">
                         {book.name}
                       </h2>
-                      <div className="mt-1">
-                        <p>本体価格: {formatPrice(book.price)}円</p>
-                        <p>税込み: {formatPrice(taxIn(book.price))}円</p>
-                      </div>
+                      {book.price && (
+                        <div className="mt-1">
+                          <p>本体価格: {formatPrice(book.price)}円</p>
+                          <p>税込み: {formatPrice(taxIn(book.price))}円</p>
+                        </div>
+                      )}
                       <div
                         className="
                       mt-2 flex justify-end gap-4

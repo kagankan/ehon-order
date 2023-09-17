@@ -10,6 +10,11 @@ import { db, storage } from "@/lib/firebase";
 const nameId = "name";
 const priceId = "price";
 const imageId = "image";
+const writtenById = "writtenBy";
+const illustratedById = "illustratedBy";
+const publisherId = "publisher";
+const DEFAULT_IMAGE_URL =
+  "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
 
 export default function Edit() {
   const router = useRouter();
@@ -20,11 +25,14 @@ export default function Edit() {
   const [imageFile, setImageFile] = useState<File | null | undefined>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imagePath, setImagePath] = useState<string>("");
+  const [writtenBy, setWrittenBy] = useState<string>("");
+  const [illustratedBy, setIllustratedBy] = useState<string>("");
+  const [publisher, setPublisher] = useState<string>("");
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // get data from firestore
+  // 現在のデータを読み込み
   useEffect(() => {
     if (!id) {
       setErrorMessage("idがありません");
@@ -44,16 +52,23 @@ export default function Edit() {
         if (bookData) {
           setName(bookData.name);
           setPrice(String(bookData.price));
-          const imagePath = bookData.imagePath;
-          setImagePath(imagePath);
-          let downloadUrl: string;
-          try {
-            downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          } catch (error) {
-            downloadUrl =
-              "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
+          bookData.writtenBy && setWrittenBy(bookData.writtenBy);
+          bookData.illustratedBy && setIllustratedBy(bookData.illustratedBy);
+          bookData.publisher && setPublisher(bookData.publisher);
+          if (bookData.imagePath) {
+            setImagePath(bookData.imagePath);
+            let downloadUrl: string;
+            try {
+              downloadUrl = await getDownloadURL(
+                ref(storage, bookData.imagePath)
+              );
+            } catch (error) {
+              downloadUrl = DEFAULT_IMAGE_URL;
+            }
+            setImageUrl(downloadUrl);
+          } else {
+            setImageUrl(DEFAULT_IMAGE_URL);
           }
-          setImageUrl(downloadUrl);
         }
       }
     };
@@ -75,8 +90,13 @@ export default function Edit() {
     }
 
     void (async () => {
-      // 画像を更新する場合
+      let uploadPath = imagePath;
       if (imageFile) {
+        if (!uploadPath) {
+          // 画像を新規追加する場合
+          const uuid = self.crypto.randomUUID();
+          uploadPath = `/images/${uuid}-${imageFile.name}`;
+        }
         await uploadBytes(ref(storage, imagePath), imageFile);
       }
 
@@ -84,9 +104,11 @@ export default function Edit() {
       await setDoc(doc(db, "books", id).withConverter(bookConverter), {
         name: name,
         price: Number(price),
-        imagePath: imagePath,
+        imagePath: uploadPath,
+        writtenBy: writtenBy,
+        illustratedBy: illustratedBy,
+        publisher: publisher,
       });
-
       setIsLoading(false);
     })();
   };
@@ -114,7 +136,6 @@ export default function Edit() {
                   className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                   id={nameId}
                   type="text"
-                  placeholder="商品名"
                 />
 
                 <label
@@ -155,17 +176,57 @@ export default function Edit() {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="本体価格"
                 />
               </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={writtenById}
+                >
+                  著者
+                </label>
+                <input
+                  value={writtenBy}
+                  onChange={(e) => setWrittenBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={writtenById}
+                  type="text"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={illustratedById}
+                >
+                  絵
+                </label>
+                <input
+                  value={illustratedBy}
+                  onChange={(e) => setIllustratedBy(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={illustratedById}
+                  type="text"
+                />
+              </div>
+              <div className="mb-6">
+                <label
+                  className="mb-2 block font-bold text-gray-700"
+                  htmlFor={publisherId}
+                >
+                  出版社
+                </label>
+                <input
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+                  className="focus:shadow-outline mb-3 w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                  id={publisherId}
+                  type="text"
+                />
+              </div>
+
               <button
                 className="focus:shadow-outline ml-auto block rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 "
-                disabled={
-                  isLoading ||
-                  name === "" ||
-                  price === "" ||
-                  !(imageFile || imagePath)
-                }
+                disabled={isLoading || name === "" || price === ""}
               >
                 更新
               </button>

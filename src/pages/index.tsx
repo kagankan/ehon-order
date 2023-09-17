@@ -83,10 +83,31 @@ export default function Home() {
                       <h2 className="text-xl font-medium text-gray-900">
                         {book.name}
                       </h2>
-                      <p className="mt-2">
-                        {formatPrice(taxIn(book.price))}円
-                        <span className="text-sm">（税込み）</span>
-                      </p>
+                      {(book.writtenBy ||
+                        book.illustratedBy ||
+                        book.publisher) && (
+                        <div className="mt-2">
+                          {book.writtenBy && (
+                            <p className="text-gray-500">作:{book.writtenBy}</p>
+                          )}
+                          {book.illustratedBy && (
+                            <p className="text-gray-500">
+                              絵:{book.illustratedBy}
+                            </p>
+                          )}
+                          {book.publisher && (
+                            <p className="text-gray-500">
+                              出版:{book.publisher}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {book.price && (
+                        <p className="mt-2">
+                          {formatPrice(taxIn(book.price))}円
+                          <span className="text-sm">（税込み）</span>
+                        </p>
+                      )}
                     </div>
                   </li>
                 </ErrorBoundary>
