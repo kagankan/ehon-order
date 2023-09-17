@@ -90,27 +90,21 @@ export default function Edit() {
     }
 
     void (async () => {
-      let uploadResult;
+      let uploadPath = imagePath;
       if (imageFile) {
-        // 画像を新規追加する場合
-        if (!imagePath) {
-          // まずStorageに画像をアップロード
+        if (!uploadPath) {
+          // 画像を新規追加する場合
           const uuid = self.crypto.randomUUID();
-          uploadResult = await uploadBytes(
-            ref(storage, `/images/${uuid}-${imageFile.name}`),
-            imageFile
-          );
-        } else {
-          // 画像を更新する場合
-          await uploadBytes(ref(storage, imagePath), imageFile);
+          uploadPath = `/images/${uuid}-${imageFile.name}`;
         }
+        await uploadBytes(ref(storage, imagePath), imageFile);
       }
 
       // 続いてFirestoreにデータを保存
       await setDoc(doc(db, "books", id).withConverter(bookConverter), {
         name: name,
         price: Number(price),
-        ...(uploadResult ? { imagePath: uploadResult.metadata.fullPath } : {}),
+        imagePath: uploadPath,
         writtenBy: writtenBy,
         illustratedBy: illustratedBy,
         publisher: publisher,
