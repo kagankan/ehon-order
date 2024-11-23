@@ -1,11 +1,10 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getBookById, updateBook } from "@firebasegen/default-connector";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { bookConverter } from "@/features/book/firestore";
-import { db, storage } from "@/lib/firebase";
+import { dataConnect, storage } from "@/lib/firebase";
 
 const nameId = "name";
 const priceId = "price";
@@ -44,31 +43,27 @@ export default function Edit() {
     }
 
     const fetchBook = async () => {
-      const bookDoc = await getDoc(
-        doc(db, "books", id).withConverter(bookConverter)
-      );
-      if (bookDoc.exists()) {
-        const bookData = bookDoc.data();
-        if (bookData) {
-          setName(bookData.name);
-          setPrice(String(bookData.price));
-          bookData.writtenBy && setWrittenBy(bookData.writtenBy);
-          bookData.illustratedBy && setIllustratedBy(bookData.illustratedBy);
-          bookData.publisher && setPublisher(bookData.publisher);
-          if (bookData.imagePath) {
-            setImagePath(bookData.imagePath);
-            let downloadUrl: string;
-            try {
-              downloadUrl = await getDownloadURL(
-                ref(storage, bookData.imagePath)
-              );
-            } catch (error) {
-              downloadUrl = DEFAULT_IMAGE_URL;
-            }
-            setImageUrl(downloadUrl);
-          } else {
-            setImageUrl(DEFAULT_IMAGE_URL);
+      const { data } = await getBookById(dataConnect, { id: id });
+      const bookData = data?.book;
+      if (bookData) {
+        setName(bookData.name);
+        setPrice(String(bookData.price));
+        bookData.writtenBy && setWrittenBy(bookData.writtenBy);
+        bookData.illustratedBy && setIllustratedBy(bookData.illustratedBy);
+        bookData.publisher && setPublisher(bookData.publisher);
+        if (bookData.imagePath) {
+          setImagePath(bookData.imagePath);
+          let downloadUrl: string;
+          try {
+            downloadUrl = await getDownloadURL(
+              ref(storage, bookData.imagePath)
+            );
+          } catch (error) {
+            downloadUrl = DEFAULT_IMAGE_URL;
           }
+          setImageUrl(downloadUrl);
+        } else {
+          setImageUrl(DEFAULT_IMAGE_URL);
         }
       }
     };
@@ -97,11 +92,12 @@ export default function Edit() {
           const uuid = self.crypto.randomUUID();
           uploadPath = `/images/${uuid}-${imageFile.name}`;
         }
-        await uploadBytes(ref(storage, imagePath), imageFile);
+        await uploadBytes(ref(storage, uploadPath), imageFile);
       }
 
-      // 続いてFirestoreにデータを保存
-      await setDoc(doc(db, "books", id).withConverter(bookConverter), {
+      // データを保存
+      await updateBook(dataConnect, {
+        id: id,
         name: name,
         price: Number(price),
         imagePath: uploadPath,

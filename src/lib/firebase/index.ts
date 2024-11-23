@@ -1,7 +1,10 @@
 // import { getAnalytics } from "firebase/analytics";
 import { connectorConfig } from "@firebasegen/default-connector";
 import { getApps, initializeApp } from "firebase/app";
-import { getDataConnect } from "firebase/data-connect";
+import {
+  connectDataConnectEmulator,
+  getDataConnect,
+} from "firebase/data-connect";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
@@ -32,3 +35,8 @@ export const app =
 export const db = getFirestore(app);
 export const storage = getStorage();
 export const dataConnect = getDataConnect(app, connectorConfig);
+
+if (process.env.NODE_ENV === "development") {
+  // 開発中はエミュレータを使う
+  connectDataConnectEmulator(dataConnect, "127.0.0.1", 9399, false);
+}

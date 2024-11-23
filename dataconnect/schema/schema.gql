@@ -46,7 +46,13 @@
 
 type Book @table {
   id: UUID! @default(expr: "uuidV4()")
-  title: String!
-  imageUrl: String!
-  genre: String
+  name: String!
+  price: Int
+  imagePath: String
+  # 作
+  writtenBy: String
+  # 絵
+  illustratedBy: String
+  # 出版社
+  publisher: String
 }

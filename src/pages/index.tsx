@@ -1,13 +1,11 @@
 import { listBooks } from "@firebasegen/default-connector";
-import { collection, getDocs } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { bookConverter } from "@/features/book/firestore";
 import { formatPrice, taxIn } from "@/features/book/functions";
 import { Book } from "@/features/book/types";
-import { dataConnect, db } from "@/lib/firebase";
+import { dataConnect } from "@/lib/firebase";
 
 const storage = getStorage();
 
@@ -18,23 +16,21 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true);
     void (async () => {
-      const books = await listBooks(dataConnect);
-      console.log(books);
-      const querySnapshot = await getDocs(
-        collection(db, "books").withConverter(bookConverter)
-      );
+      const { data } = await listBooks(dataConnect);
       const list = await Promise.all(
-        querySnapshot.docs.map(async (doc) => {
-          const data = doc.data();
-          const imagePath = data.imagePath;
+        data.books.map(async (record) => {
+          const imagePath = record.imagePath;
           let downloadUrl: string;
           try {
+            if (!imagePath) {
+              throw new Error("No image path");
+            }
             downloadUrl = await getDownloadURL(ref(storage, imagePath));
           } catch (error) {
             downloadUrl =
               "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
           }
-          return { ...data, imageUrl: downloadUrl };
+          return { ...record, imageUrl: downloadUrl };
         })
       );
       setAllBooks(list);

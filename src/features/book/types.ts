@@ -1,11 +1,11 @@
 export type Book = {
   name: string;
-  price?: number;
-  imagePath?: string;
+  price?: number | null;
+  imagePath?: string | null;
   /** 作 */
-  writtenBy?: string;
+  writtenBy?: string | null;
   /** 絵 */
-  illustratedBy?: string;
+  illustratedBy?: string | null;
   /** 出版社 */
-  publisher?: string;
+  publisher?: string | null;
 };
