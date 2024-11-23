@@ -1,3 +1,4 @@
+import { listBooks } from "@firebasegen/default-connector";
 import { collection, getDocs } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import Head from "next/head";
@@ -6,7 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { bookConverter } from "@/features/book/firestore";
 import { formatPrice, taxIn } from "@/features/book/functions";
 import { Book } from "@/features/book/types";
-import { db } from "@/lib/firebase";
+import { dataConnect, db } from "@/lib/firebase";
 
 const storage = getStorage();
 
@@ -17,6 +18,8 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true);
     void (async () => {
+      const books = await listBooks(dataConnect);
+      console.log(books);
       const querySnapshot = await getDocs(
         collection(db, "books").withConverter(bookConverter)
       );

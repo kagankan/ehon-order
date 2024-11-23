@@ -1,5 +1,7 @@
 // import { getAnalytics } from "firebase/analytics";
-import { initializeApp } from "firebase/app";
+import { connectorConfig } from "@firebasegen/default-connector";
+import { getApps, initializeApp } from "firebase/app";
+import { getDataConnect } from "firebase/data-connect";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import {
@@ -23,7 +25,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+export const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+
 // const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 export const storage = getStorage();
+export const dataConnect = getDataConnect(app, connectorConfig);
