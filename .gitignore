@@ -33,3 +33,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Firebase cache
+.firebase/
+
+# dataconnect generated files
+.dataconnect
+
