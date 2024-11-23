@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "ehon-order-connect"
+location: "asia-northeast1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "ehon-database"
+      cloudSql:
+        instanceId: "ehon-order-sql"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

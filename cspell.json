@@ -8,7 +8,9 @@
     "typescript"
   ],
   "words": [
+    "dataconnect",
     "ehon",
+    "firebasegen",
     "Firestore",
     "markuplint",
     "signup",

@@ -1,14 +1,13 @@
-import { getDocs, collection, doc, deleteDoc } from "firebase/firestore";
+import { deleteBook, listBooks } from "@firebasegen/default-connector";
 import { getDownloadURL, ref } from "firebase/storage";
 import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { bookConverter } from "@/features/book/firestore";
 import { formatPrice, taxIn } from "@/features/book/functions";
 import { Book } from "@/features/book/types";
-import { db, storage } from "@/lib/firebase";
+import { dataConnect, storage } from "@/lib/firebase";
 
 export default function Admin() {
   const [allBooks, setAllBooks] = useState<
@@ -18,24 +17,25 @@ export default function Admin() {
 
   useEffect(() => {
     void (async () => {
-      const querySnapshot = await getDocs(
-        collection(db, "books").withConverter(bookConverter)
-      );
+      const { data } = await listBooks(dataConnect);
+
       const list = await Promise.all(
-        querySnapshot.docs.map(async (doc) => {
-          const data = doc.data();
-          const imagePath = data.imagePath;
+        data.books.map(async (record) => {
+          const imagePath = record.imagePath;
           let downloadUrl: string;
           try {
+            if (!imagePath) {
+              throw new Error("No image path");
+            }
             downloadUrl = await getDownloadURL(ref(storage, imagePath));
           } catch (error) {
             downloadUrl =
               "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
           }
           return {
-            ...data,
+            ...record,
             imageUrl: downloadUrl,
-            id: doc.id,
+            id: record.id,
           };
         })
       );
@@ -43,14 +43,14 @@ export default function Admin() {
     })();
   }, []);
 
-  const deleteBook = async (id: string) => {
+  const handleDeleteBook = async (id: string) => {
     setIsLoading(true);
     const targetBook = allBooks.find((book) => book.id === id);
     if (
       targetBook &&
       window.confirm(`「${targetBook?.name}」を削除しますか？`)
     ) {
-      await deleteDoc(doc(db, "books", id));
+      await deleteBook(dataConnect, { id: id });
       setAllBooks(allBooks.filter((book) => book.id !== id));
     }
     setIsLoading(false);
@@ -117,7 +117,7 @@ export default function Admin() {
                           className="
                         rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75
                         "
-                          onClick={() => void deleteBook(book.id)}
+                          onClick={() => void handleDeleteBook(book.id)}
                         >
                           削除
                         </button>

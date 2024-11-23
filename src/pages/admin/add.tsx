@@ -1,10 +1,9 @@
-import { addDoc, collection } from "firebase/firestore";
+import { createBook } from "@firebasegen/default-connector";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { bookConverter } from "@/features/book/firestore";
-import { db } from "@/lib/firebase";
+import { dataConnect } from "@/lib/firebase";
 
 const nameId = "name";
 
@@ -20,16 +19,12 @@ export default function Add() {
     setIsLoading(true);
 
     void (async () => {
-      // Firestoreにデータを保存
-      const ref = await addDoc(
-        collection(db, "books").withConverter(bookConverter),
-        {
-          name: name,
-        }
-      );
+      // データを保存
+      const { data: result } = await createBook(dataConnect, { name: name });
+      const newId = result.book_insert.id;
 
       setIsLoading(false);
-      void router.push(`/admin/edit?id=${ref.id}`);
+      void router.push(`/admin/edit?id=${newId}`);
     })();
   };
 

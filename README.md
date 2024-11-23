@@ -8,8 +8,9 @@
 - Next.js
 - Tailwind CSS
   - GitHub Copilotのサポートを受けてデザインを作りやすいため。
-- Cloud Firestore
-- Firebase Authentication
+- Firebase
+  - Firebase Data Connect
+  - Firebase Authentication
 
 ## Getting Started
 

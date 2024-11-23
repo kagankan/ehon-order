@@ -1,0 +1,29 @@
+mutation CreateBook($name: String!) @auth(level: USER_EMAIL_VERIFIED) {
+  book_insert(data: { name: $name })
+}
+
+mutation UpdateBook(
+  $id: UUID!
+  $name: String!
+  $price: Int
+  $imagePath: String
+  $writtenBy: String
+  $illustratedBy: String
+  $publisher: String
+) @auth(level: USER) {
+  book_update(
+    data: {
+      name: $name
+      price: $price
+      imagePath: $imagePath
+      writtenBy: $writtenBy
+      illustratedBy: $illustratedBy
+      publisher: $publisher
+    }
+    key: { id: $id }
+  )
+}
+
+mutation DeleteBook($id: UUID!) @auth(level: USER) {
+  book_delete(key: { id: $id })
+}

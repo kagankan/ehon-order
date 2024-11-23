@@ -5,6 +5,8 @@
     "dbaeumer.vscode-eslint",
     "stylelint.vscode-stylelint",
     "yusukehirao.vscode-markuplint",
+    "googlecloudtools.firebase-dataconnect-vscode",
+    "graphql.vscode-graphql-syntax",
   ],
   "unwantedRecommendations": []
 }

@@ -1,0 +1,23 @@
+query ListBooks @auth(level: PUBLIC) {
+  books {
+    id
+    name
+    price
+    imagePath
+    writtenBy
+    illustratedBy
+    publisher
+  }
+}
+
+query GetBookById($id: UUID!) @auth(level: PUBLIC) {
+  book(id: $id) {
+    id
+    name
+    price
+    imagePath
+    writtenBy
+    illustratedBy
+    publisher
+  }
+}
