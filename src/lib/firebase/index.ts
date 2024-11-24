@@ -1,6 +1,7 @@
 // import { getAnalytics } from "firebase/analytics";
 import { connectorConfig } from "@firebasegen/default-connector";
 import { getApps, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import {
   connectDataConnectEmulator,
   getDataConnect,
@@ -32,6 +33,7 @@ export const app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 // const analytics = getAnalytics(app);
+export const auth = getAuth();
 export const db = getFirestore(app);
 export const storage = getStorage();
 export const dataConnect = getDataConnect(app, connectorConfig);

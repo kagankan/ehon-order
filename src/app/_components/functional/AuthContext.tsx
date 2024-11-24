@@ -1,5 +1,7 @@
+"use client";
+
 import type { User } from "@firebase/auth";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   FC,
   ReactNode,
@@ -8,6 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { auth } from "@/lib/firebase";
 
 type AuthContextType = User | null | undefined;
 const DEFAULT_VALUE: AuthContextType = undefined;
@@ -18,7 +21,6 @@ const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AuthContextType>(DEFAULT_VALUE);
 
   useEffect(() => {
-    const auth = getAuth();
     return onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
