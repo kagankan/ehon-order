@@ -13,6 +13,7 @@ const schema = z
     // imagePath: z.string().nullable().optional(),
     imageUrl: z.string().nullable().optional(),
   })
+  .readonly()
   .brand<"Book">();
 
 export type Book = z.infer<typeof schema>;
