@@ -4,7 +4,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { AdminLayout } from "@/features/admin/components/AdminLayout";
+import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
 import { bookRepository } from "@/infrastructure/book";
 import { storage } from "@/lib/firebase";
 

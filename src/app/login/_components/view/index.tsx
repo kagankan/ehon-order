@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { useAuthContext } from "@/app/_components/functional/AuthContext";
 import { auth } from "@/lib/firebase";
 
 const emailId = "email";

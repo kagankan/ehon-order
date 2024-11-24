@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import "@/lib/firebase";
 import type { Metadata } from "next";
-import { AuthProvider } from "@/features/auth/context/AuthContext";
+import { AuthProvider } from "@/app/_components/functional/AuthContext";
 export const metadata: Metadata = {
   title: {
     default: "えほんはともだち",

@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { AdminLayout } from "@/features/admin/components/AdminLayout";
+import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
 import { bookRepository } from "@/infrastructure/book";
 
 const nameId = "name";
