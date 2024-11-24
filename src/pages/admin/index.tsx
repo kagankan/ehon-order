@@ -1,4 +1,3 @@
-import { deleteBook } from "@firebasegen/default-connector";
 import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -6,7 +5,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Book, formatPrice, taxIn } from "@/domain/book";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
 import { bookRepository } from "@/infrastructure/book";
-import { dataConnect } from "@/lib/firebase";
 
 export default function Admin() {
   const [allBooks, setAllBooks] = useState<Readonly<Book>[]>([]);
@@ -26,7 +24,7 @@ export default function Admin() {
       targetBook &&
       window.confirm(`「${targetBook?.name}」を削除しますか？`)
     ) {
-      await deleteBook(dataConnect, { id: id });
+      await bookRepository.deleteBook(id);
       setAllBooks(allBooks.filter((book) => book.id !== id));
     }
     setIsLoading(false);

@@ -10,7 +10,7 @@ const schema = z
     writtenBy: z.string().nullable().optional(),
     illustratedBy: z.string().nullable().optional(),
     publisher: z.string().nullable().optional(),
-    // imagePath: z.string().nullable().optional(),
+    imagePath: z.string().nullable().optional(),
     imageUrl: z.string().nullable().optional(),
   })
   .readonly()

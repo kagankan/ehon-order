@@ -1,10 +1,10 @@
-import { getBookById, updateBook } from "@firebasegen/default-connector";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { dataConnect, storage } from "@/lib/firebase";
+import { bookRepository } from "@/infrastructure/book";
+import { storage } from "@/lib/firebase";
 
 const nameId = "name";
 const priceId = "price";
@@ -43,8 +43,7 @@ export default function Edit() {
     }
 
     const fetchBook = async () => {
-      const { data } = await getBookById(dataConnect, { id: id });
-      const bookData = data?.book;
+      const bookData = await bookRepository.getBookById(id);
       if (bookData) {
         setName(bookData.name);
         setPrice(String(bookData.price));
@@ -96,7 +95,7 @@ export default function Edit() {
       }
 
       // データを保存
-      await updateBook(dataConnect, {
+      await bookRepository.updateBook({
         id: id,
         name: name,
         price: Number(price),

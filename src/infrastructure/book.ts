@@ -10,22 +10,23 @@ import { parseBook } from "@/domain/book/entity";
 import { IBookRepository } from "@/domain/book/repository";
 import { dataConnect, storage } from "@/lib/firebase";
 
+const getImageUrl = async (imagePath?: string | null) => {
+  try {
+    if (!imagePath) {
+      throw new Error("No image path");
+    }
+    return await getDownloadURL(ref(storage, imagePath));
+  } catch (error) {
+    return "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
+  }
+};
+
 export const bookRepository: IBookRepository = {
   listBooks: async () => {
     const { data } = await listBooks(dataConnect);
     const list = await Promise.all(
       data.books.map(async (record) => {
-        let downloadUrl: string;
-        try {
-          const imagePath = record.imagePath;
-          if (!imagePath) {
-            throw new Error("No image path");
-          }
-          downloadUrl = await getDownloadURL(ref(storage, imagePath));
-        } catch (error) {
-          downloadUrl =
-            "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
-        }
+        const downloadUrl = await getImageUrl(record.imagePath);
         return {
           ...record,
           imageUrl: downloadUrl,
@@ -36,7 +37,10 @@ export const bookRepository: IBookRepository = {
   },
   getBookById: async (id) => {
     const { data } = await getBookById(dataConnect, { id: id });
-    return parseBook(data.book);
+    return parseBook({
+      ...data.book,
+      imageUrl: await getImageUrl(data.book?.imagePath),
+    });
   },
   createBook: async (name) => {
     const { data } = await createBook(dataConnect, { name: name });
