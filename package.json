@@ -24,7 +24,8 @@
     "react-dom": "18.2.0",
     "react-error-boundary": "^4.0.4",
     "tailwindcss": "^3.3.2",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@markuplint/jsx-parser": "^3.7.0",

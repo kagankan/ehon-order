@@ -1,9 +1,8 @@
-import { createBook } from "@firebasegen/default-connector";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { dataConnect } from "@/lib/firebase";
+import { bookRepository } from "@/infrastructure/book";
 
 const nameId = "name";
 
@@ -20,8 +19,7 @@ export default function Add() {
 
     void (async () => {
       // データを保存
-      const { data: result } = await createBook(dataConnect, { name: name });
-      const newId = result.book_insert.id;
+      const { id: newId } = await bookRepository.createBook(name);
 
       setIsLoading(false);
       void router.push(`/admin/edit?id=${newId}`);

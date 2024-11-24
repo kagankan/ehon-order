@@ -1,44 +1,18 @@
-import { deleteBook, listBooks } from "@firebasegen/default-connector";
-import { getDownloadURL, ref } from "firebase/storage";
 import Head from "next/head";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { Book, formatPrice, taxIn } from "@/domain/book";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
-import { formatPrice, taxIn } from "@/features/book/functions";
-import { Book } from "@/features/book/types";
-import { dataConnect, storage } from "@/lib/firebase";
+import { bookRepository } from "@/infrastructure/book";
 
 export default function Admin() {
-  const [allBooks, setAllBooks] = useState<
-    Readonly<Book & { id: string; imageUrl: string }>[]
-  >([]);
+  const [allBooks, setAllBooks] = useState<Readonly<Book>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     void (async () => {
-      const { data } = await listBooks(dataConnect);
-
-      const list = await Promise.all(
-        data.books.map(async (record) => {
-          const imagePath = record.imagePath;
-          let downloadUrl: string;
-          try {
-            if (!imagePath) {
-              throw new Error("No image path");
-            }
-            downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          } catch (error) {
-            downloadUrl =
-              "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
-          }
-          return {
-            ...record,
-            imageUrl: downloadUrl,
-            id: record.id,
-          };
-        })
-      );
+      const list = await bookRepository.listBooks();
       setAllBooks(list);
     })();
   }, []);
@@ -50,7 +24,7 @@ export default function Admin() {
       targetBook &&
       window.confirm(`「${targetBook?.name}」を削除しますか？`)
     ) {
-      await deleteBook(dataConnect, { id: id });
+      await bookRepository.deleteBook(id);
       setAllBooks(allBooks.filter((book) => book.id !== id));
     }
     setIsLoading(false);
