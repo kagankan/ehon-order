@@ -1,38 +1,17 @@
-import { listBooks } from "@firebasegen/default-connector";
-import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { formatPrice, taxIn } from "@/features/book/functions";
-import { Book } from "@/features/book/types";
-import { dataConnect } from "@/lib/firebase";
-
-const storage = getStorage();
+import { Book, formatPrice, taxIn } from "@/domain/book";
+import { bookRepository } from "@/infrastructure/book";
 
 export default function Home() {
-  const [allBooks, setAllBooks] = useState<(Book & { imageUrl: string })[]>([]);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
     void (async () => {
-      const { data } = await listBooks(dataConnect);
-      const list = await Promise.all(
-        data.books.map(async (record) => {
-          const imagePath = record.imagePath;
-          let downloadUrl: string;
-          try {
-            if (!imagePath) {
-              throw new Error("No image path");
-            }
-            downloadUrl = await getDownloadURL(ref(storage, imagePath));
-          } catch (error) {
-            downloadUrl =
-              "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
-          }
-          return { ...record, imageUrl: downloadUrl };
-        })
-      );
+      const list = await bookRepository.listBooks();
       setAllBooks(list);
       setIsLoading(false);
     })();
