@@ -1,6 +1,8 @@
+"use client";
+
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { AdminLayout } from "@/features/admin/components/AdminLayout";
 import { bookRepository } from "@/infrastructure/book";
@@ -16,8 +18,8 @@ const DEFAULT_IMAGE_URL =
   "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
 
 export default function Edit() {
-  const router = useRouter();
-  const { id } = router.query;
+  const query = useSearchParams();
+  const id = query.get("id");
 
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<string>("");

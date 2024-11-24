@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FC, ReactNode } from "react";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
 import { Header } from "./Header";
@@ -10,7 +10,7 @@ export const AdminLayout: FC<{ children: ReactNode }> = ({ children }) => {
 
   if (!user) {
     if (typeof window !== "undefined") {
-      void router.push("/login");
+      router.push("/login");
     }
     return null;
   }

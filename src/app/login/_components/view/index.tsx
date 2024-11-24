@@ -1,9 +1,12 @@
+"use client";
+
 import { FirebaseError } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { auth } from "@/lib/firebase";
 
 const emailId = "email";
 const passwordId = "password";
@@ -27,11 +30,10 @@ export default function Login() {
 
     void (async () => {
       try {
-        const auth = getAuth();
         await signInWithEmailAndPassword(auth, email, password);
         // eslint-disable-next-line no-console
         console.log("login success");
-        await router.push("/admin");
+        router.push("/admin");
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e);

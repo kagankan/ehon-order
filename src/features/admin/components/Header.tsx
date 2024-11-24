@@ -1,18 +1,19 @@
 import { FirebaseError } from "firebase/app";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
 import { useAuthContext } from "@/features/auth/context/AuthContext";
+import { auth } from "@/lib/firebase";
 
 export const Header: FC = () => {
+  const router = useRouter();
   const user = useAuthContext();
   const logOut = () => {
     void (async () => {
       try {
-        const auth = getAuth();
         await signOut(auth);
-        await router.push("/login");
+        router.push("/login");
       } catch (e) {
         if (e instanceof FirebaseError) {
           // eslint-disable-next-line no-console
