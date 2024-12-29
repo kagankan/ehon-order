@@ -1,3 +1,5 @@
+"use client";
+
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
