@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
 import { Book, formatPrice, taxIn } from "@/domain/book";
 import { StockLog } from "@/domain/stock-log/entity";
+import { getCurrentStocks } from "@/domain/stock-log/service";
 import { bookRepository } from "@/infrastructure/book";
 import { stockLogRepository } from "@/infrastructure/stock-log";
 
@@ -28,6 +29,7 @@ export default function Admin() {
       setAllLogs(list);
     })();
   }, []);
+  const currentStocks = getCurrentStocks(allLogs ?? []);
 
   const handleDeleteBook = async (id: string) => {
     setIsLoading(true);
@@ -81,7 +83,11 @@ export default function Admin() {
                     <h2 className="text-xl font-bold leading-loose text-gray-900">
                       {book.name}
                     </h2>
-                    {book.price && (
+                    <p>
+                      在庫数:
+                      {currentStocks[book.id] ?? 0}
+                    </p>
+                    {book.price != null && (
                       <div className="mt-1">
                         <p>本体価格: {formatPrice(book.price)}円</p>
                         <p>税込み: {formatPrice(taxIn(book.price))}円</p>

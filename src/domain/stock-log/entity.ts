@@ -6,6 +6,7 @@ const schema = z
     book: z.object({
       // 本当は bookSchema から作りたいが、brandだからかできない
       name: z.string(),
+      id: z.string(),
     }),
     /** 増減の数量。入荷の場合は正の数、販売の場合は負の数。入荷できなかったメモもあるかもなので0も許容 */
     quantity: z.number().int(),
