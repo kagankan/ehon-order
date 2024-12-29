@@ -1,12 +1,14 @@
+"use client";
+
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
-  getAuth,
   sendEmailVerification,
 } from "firebase/auth";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { auth } from "@/lib/firebase";
 
 const emailId = "email";
 const passwordId = "password";
@@ -25,14 +27,13 @@ export default function SignUp() {
 
     void (async () => {
       try {
-        const auth = getAuth();
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
         await sendEmailVerification(userCredential.user);
-        await router.push("/signup/completed");
+        router.push("/signup/completed");
       } catch (e) {
         if (e instanceof FirebaseError) {
           setErrorMessage(e.message);
