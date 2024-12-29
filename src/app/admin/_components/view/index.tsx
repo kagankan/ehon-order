@@ -6,16 +6,26 @@ import { useState, useEffect } from "react";
 // import { ErrorBoundary } from "react-error-boundary";
 import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
 import { Book, formatPrice, taxIn } from "@/domain/book";
+import { StockLog } from "@/domain/stock-log/entity";
 import { bookRepository } from "@/infrastructure/book";
+import { stockLogRepository } from "@/infrastructure/stock-log";
 
 export default function Admin() {
   const [allBooks, setAllBooks] = useState<Readonly<Book>[]>([]);
+  const [allLogs, setAllLogs] = useState<Readonly<StockLog>[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     void (async () => {
       const list = await bookRepository.listBooks();
       setAllBooks(list);
+    })();
+  }, []);
+
+  useEffect(() => {
+    void (async () => {
+      const list = await stockLogRepository.listStockLogs();
+      setAllLogs(list);
     })();
   }, []);
 
@@ -104,6 +114,38 @@ export default function Admin() {
                 </li>
               ))}
             </ul>
+          </div>
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold text-gray-900">在庫履歴</h2>
+            <div className="mt-4">
+              <table className="w-full border-collapse border border-gray-300 bg-white">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border border-gray-300 p-2">日時</th>
+                    <th className="border border-gray-300 p-2">商品名</th>
+                    <th className="border border-gray-300 p-2">数量</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allLogs?.map((log, index) => (
+                    <tr
+                      key={index}
+                      className="border border-gray-300 hover:bg-gray-100"
+                    >
+                      <td className="border border-gray-300 p-2">
+                        {log.createdAt.toLocaleString()}
+                      </td>
+                      <td className="border border-gray-300 p-2">
+                        {log.book.name}
+                      </td>
+                      <td className="border border-gray-300 p-2">
+                        {log.quantity}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </AdminLayout>
