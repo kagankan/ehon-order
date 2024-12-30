@@ -51,14 +51,18 @@ export default function Admin() {
     const bookId = formData.get("bookId") as string;
     const quantity = Number(formData.get("quantity"));
     const date = formData.get("date") as string;
+    const memo = formData.get("memo") as string;
     if (!bookId || !quantity || !date) {
+      // 必須プロパティチェック
       return;
     }
     setIsLoading(true);
-    await stockLogRepository.createStockLog({ bookId, quantity, date });
+    await stockLogRepository.createStockLog({ bookId, quantity, date, memo });
     const list = await stockLogRepository.listStockLogs();
     setAllLogs(list);
     setIsLoading(false);
+    // 入力済みの値をクリア
+    form.reset();
   };
 
   return (
@@ -144,9 +148,10 @@ export default function Admin() {
               <table className="w-full border-collapse border border-gray-300 bg-white">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border border-gray-300 p-2">日時</th>
+                    <th className="border border-gray-300 p-2">日付</th>
                     <th className="border border-gray-300 p-2">商品名</th>
                     <th className="border border-gray-300 p-2">数量</th>
+                    <th className="border border-gray-300 p-2">メモ</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,7 +161,7 @@ export default function Admin() {
                       className="border border-gray-300 hover:bg-gray-100"
                     >
                       <td className="border border-gray-300 p-2">
-                        {log.createdAt.toLocaleString()}
+                        {log.date.toLocaleDateString()}
                       </td>
                       <td className="border border-gray-300 p-2">
                         {log.book.name}
@@ -164,6 +169,7 @@ export default function Admin() {
                       <td className="border border-gray-300 p-2">
                         {log.quantity}
                       </td>
+                      <td className="border border-gray-300 p-2">{log.memo}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -197,6 +203,7 @@ export default function Admin() {
                       id="bookId"
                       className="rounded-md  border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
                     >
+                      <option value="">選択してください</option>
                       {allBooks.map((book) => (
                         <option key={book.id} value={book.id}>
                           {book.name}
