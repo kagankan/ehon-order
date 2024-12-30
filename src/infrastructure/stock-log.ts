@@ -1,4 +1,4 @@
-import { listStockLogs } from "@firebasegen/default-connector";
+import { listStockLogs, createStockLog } from "@firebasegen/default-connector";
 import { parseStockLog } from "@/domain/stock-log/entity";
 import { IStockLogRepository } from "@/domain/stock-log/repository";
 
@@ -17,5 +17,9 @@ export const stockLogRepository: IStockLogRepository = {
       })
       .filter((record) => record !== null);
     return validated;
+  },
+  createStockLog: async (args) => {
+    const { data } = await createStockLog(args);
+    return data.stockLog_insert;
   },
 };

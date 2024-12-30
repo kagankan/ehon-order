@@ -44,6 +44,23 @@ export default function Admin() {
     setIsLoading(false);
   };
 
+  const handleAddStockLog = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const bookId = formData.get("bookId") as string;
+    const quantity = Number(formData.get("quantity"));
+    const date = formData.get("date") as string;
+    if (!bookId || !quantity || !date) {
+      return;
+    }
+    setIsLoading(true);
+    await stockLogRepository.createStockLog({ bookId, quantity, date });
+    const list = await stockLogRepository.listStockLogs();
+    setAllLogs(list);
+    setIsLoading(false);
+  };
+
   return (
     <>
       <Head>
@@ -151,6 +168,75 @@ export default function Admin() {
                   ))}
                 </tbody>
               </table>
+              {/* 追加UI */}
+              <form
+                onSubmit={(e) => void handleAddStockLog(e)}
+                className="mt-4 flex flex-col gap-4"
+              >
+                <div className="grid grid-cols-[auto_auto_6rem_1fr] gap-4">
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="date" className="font-medium text-gray-700">
+                      日付:
+                    </label>
+                    <input
+                      type="date"
+                      name="date"
+                      id="date"
+                      className="rounded-md  border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="bookId"
+                      className="font-medium text-gray-700"
+                    >
+                      商品名:
+                    </label>
+                    <select
+                      name="bookId"
+                      id="bookId"
+                      className="rounded-md  border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                      {allBooks.map((book) => (
+                        <option key={book.id} value={book.id}>
+                          {book.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label
+                      htmlFor="quantity"
+                      className="font-medium text-gray-700"
+                    >
+                      数量:
+                    </label>
+                    <input
+                      type="number"
+                      name="quantity"
+                      id="quantity"
+                      className="rounded-md border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="memo" className="font-medium text-gray-700">
+                      メモ:
+                    </label>
+                    <input
+                      type="text"
+                      name="memo"
+                      id="memo"
+                      className="rounded-md border-gray-300 px-4 py-2 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="self-end rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                >
+                  追加
+                </button>
+              </form>
             </div>
           </div>
         </div>
