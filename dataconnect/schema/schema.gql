@@ -47,7 +47,7 @@
 type Book @table {
   id: UUID! @default(expr: "uuidV4()")
   name: String!
-  price: Int
+  price: Int!
   imagePath: String
   # 作
   writtenBy: String
@@ -55,4 +55,22 @@ type Book @table {
   illustratedBy: String
   # 出版社
   publisher: String
+}
+
+# 在庫管理（入荷・販売履歴）
+type StockLog @table {
+  id: UUID! @default(expr: "uuidV4()")
+  # 対象の本
+  book: Book!
+  # 入荷数・販売数（プラスの場合は入荷、マイナスの場合は販売）
+  quantity: Int!
+  # 入荷・販売があった日
+  date: Date!
+  # データの追加日時
+  # TODO: request.time にしちゃうと更新時にも更新されないか？
+  createdAt: Timestamp! @default(expr: "request.time")
+  # データの更新日時
+  updatedAt: Timestamp! @default(expr: "request.time")
+  # 備考
+  memo: String
 }
