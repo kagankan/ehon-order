@@ -10,6 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
       - uses: actions/cache@v4
         id: cache_node_modules
         with:
