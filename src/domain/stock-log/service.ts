@@ -7,7 +7,7 @@ export const getCurrentStocks = (
   const currentStocks = Object.fromEntries(
     Object.entries(grouped).map(([bookId, logs]) => [
       bookId,
-      logs.reduce((acc, log) => acc + log.quantity, 0),
+      (logs ?? []).reduce((acc, log) => acc + log.quantity, 0),
     ])
   );
   return currentStocks;
