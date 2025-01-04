@@ -27,6 +27,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@ls-lint/ls-lint": "^2.3.0-beta.3",
     "@markuplint/jsx-parser": "^3.7.0",
     "@markuplint/react-spec": "^3.8.0",
     "@typescript-eslint/eslint-plugin": "^5.59.5",

@@ -1,5 +1,5 @@
-import "@/styles/globals.css";
 import "@/lib/firebase";
+import "./_styles/globals.css";
 import type { Metadata } from "next";
 import { AuthProvider } from "@/app/_components/functional/AuthContext";
 export const metadata: Metadata = {

@@ -1,0 +1,17 @@
+ls:
+  .yaml: exists:0 # .yamlは禁止し、.ymlに統一する
+  scripts:
+    # scripts配下には、.tsファイルのみを置ける
+    .*: exists:0
+    .ts: kebab-case
+  src:
+    .*: exists:0 # src直下にはファイルを置かない
+    # .dir: regex:(app|domain|infrastructure|lib)
+    app:
+      .dir: kebab-case | regex:_.+
+    domain:
+      .dir: kebab-case
+
+ignore:
+  - node_modules
+  - out
