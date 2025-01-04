@@ -107,6 +107,23 @@ export interface UpdateBookVariables {
 
 
 /* Allow users to create refs without passing in DataConnect */
+export function listBooksRef(): QueryRef<ListBooksData, undefined>;/* Allow users to pass in custom DataConnect instances */
+export function listBooksRef(dc: DataConnect): QueryRef<ListBooksData,undefined>;
+
+export function listBooks(): QueryPromise<ListBooksData, undefined>;
+export function listBooks(dc: DataConnect): QueryPromise<ListBooksData,undefined>;
+
+
+/* Allow users to create refs without passing in DataConnect */
+export function getBookByIdRef(vars: GetBookByIdVariables): QueryRef<GetBookByIdData, GetBookByIdVariables>;
+/* Allow users to pass in custom DataConnect instances */
+export function getBookByIdRef(dc: DataConnect, vars: GetBookByIdVariables): QueryRef<GetBookByIdData,GetBookByIdVariables>;
+
+export function getBookById(vars: GetBookByIdVariables): QueryPromise<GetBookByIdData, GetBookByIdVariables>;
+export function getBookById(dc: DataConnect, vars: GetBookByIdVariables): QueryPromise<GetBookByIdData,GetBookByIdVariables>;
+
+
+/* Allow users to create refs without passing in DataConnect */
 export function createBookRef(vars: CreateBookVariables): MutationRef<CreateBookData, CreateBookVariables>;
 /* Allow users to pass in custom DataConnect instances */
 export function createBookRef(dc: DataConnect, vars: CreateBookVariables): MutationRef<CreateBookData,CreateBookVariables>;
@@ -134,36 +151,19 @@ export function deleteBook(dc: DataConnect, vars: DeleteBookVariables): Mutation
 
 
 /* Allow users to create refs without passing in DataConnect */
+export function listStockLogsRef(): QueryRef<ListStockLogsData, undefined>;/* Allow users to pass in custom DataConnect instances */
+export function listStockLogsRef(dc: DataConnect): QueryRef<ListStockLogsData,undefined>;
+
+export function listStockLogs(): QueryPromise<ListStockLogsData, undefined>;
+export function listStockLogs(dc: DataConnect): QueryPromise<ListStockLogsData,undefined>;
+
+
+/* Allow users to create refs without passing in DataConnect */
 export function createStockLogRef(vars: CreateStockLogVariables): MutationRef<CreateStockLogData, CreateStockLogVariables>;
 /* Allow users to pass in custom DataConnect instances */
 export function createStockLogRef(dc: DataConnect, vars: CreateStockLogVariables): MutationRef<CreateStockLogData,CreateStockLogVariables>;
 
 export function createStockLog(vars: CreateStockLogVariables): MutationPromise<CreateStockLogData, CreateStockLogVariables>;
 export function createStockLog(dc: DataConnect, vars: CreateStockLogVariables): MutationPromise<CreateStockLogData,CreateStockLogVariables>;
-
-
-/* Allow users to create refs without passing in DataConnect */
-export function listBooksRef(): QueryRef<ListBooksData, undefined>;/* Allow users to pass in custom DataConnect instances */
-export function listBooksRef(dc: DataConnect): QueryRef<ListBooksData,undefined>;
-
-export function listBooks(): QueryPromise<ListBooksData, undefined>;
-export function listBooks(dc: DataConnect): QueryPromise<ListBooksData,undefined>;
-
-
-/* Allow users to create refs without passing in DataConnect */
-export function getBookByIdRef(vars: GetBookByIdVariables): QueryRef<GetBookByIdData, GetBookByIdVariables>;
-/* Allow users to pass in custom DataConnect instances */
-export function getBookByIdRef(dc: DataConnect, vars: GetBookByIdVariables): QueryRef<GetBookByIdData,GetBookByIdVariables>;
-
-export function getBookById(vars: GetBookByIdVariables): QueryPromise<GetBookByIdData, GetBookByIdVariables>;
-export function getBookById(dc: DataConnect, vars: GetBookByIdVariables): QueryPromise<GetBookByIdData,GetBookByIdVariables>;
-
-
-/* Allow users to create refs without passing in DataConnect */
-export function listStockLogsRef(): QueryRef<ListStockLogsData, undefined>;/* Allow users to pass in custom DataConnect instances */
-export function listStockLogsRef(dc: DataConnect): QueryRef<ListStockLogsData,undefined>;
-
-export function listStockLogs(): QueryPromise<ListStockLogsData, undefined>;
-export function listStockLogs(dc: DataConnect): QueryPromise<ListStockLogsData,undefined>;
 
 

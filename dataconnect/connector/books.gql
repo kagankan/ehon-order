@@ -1,4 +1,29 @@
-# books
+# queries
+query ListBooks @auth(level: PUBLIC) {
+  books {
+    id
+    name
+    price
+    imagePath
+    writtenBy
+    illustratedBy
+    publisher
+  }
+}
+
+query GetBookById($id: UUID!) @auth(level: PUBLIC) {
+  book(id: $id) {
+    id
+    name
+    price
+    imagePath
+    writtenBy
+    illustratedBy
+    publisher
+  }
+}
+
+# mutations
 mutation CreateBook($name: String!) @auth(level: USER_EMAIL_VERIFIED) {
   book_insert(data: { name: $name })
 }
@@ -27,9 +52,4 @@ mutation UpdateBook(
 
 mutation DeleteBook($id: UUID!) @auth(level: USER) {
   book_delete(key: { id: $id })
-}
-
-# stockLogs
-mutation CreateStockLog($bookId: UUID!, $date: Date!, $quantity: Int!, $memo: String) @auth(level: USER) {
-  stockLog_insert(data: { book: { id: $bookId }, date: $date, quantity: $quantity, memo: $memo })
 }
