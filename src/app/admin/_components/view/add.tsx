@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
-import { bookRepository } from "@/infrastructure/book";
+import { container } from "@/di";
 
 const nameId = "name";
 
@@ -21,7 +21,7 @@ export default function Add() {
 
     void (async () => {
       // データを保存
-      const { id: newId } = await bookRepository.createBook(name);
+      const { id: newId } = await container.bookUseCase.createBook(name);
 
       setIsLoading(false);
       void router.push(`/admin/edit?id=${newId}`);

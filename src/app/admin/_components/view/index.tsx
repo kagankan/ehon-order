@@ -5,11 +5,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 // import { ErrorBoundary } from "react-error-boundary";
 import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
+import { container } from "@/di";
 import { Book, formatPrice, taxIn } from "@/domain/book";
 import { StockLog } from "@/domain/stock-log/entity";
 import { getCurrentStocks } from "@/domain/stock-log/service";
-import { bookRepository } from "@/infrastructure/book";
-import { stockLogRepository } from "@/infrastructure/stock-log";
 
 export default function Admin() {
   const [allBooks, setAllBooks] = useState<Readonly<Book>[]>([]);
@@ -18,14 +17,14 @@ export default function Admin() {
 
   useEffect(() => {
     void (async () => {
-      const list = await bookRepository.listBooks();
+      const list = await container.bookUseCase.listBooks();
       setAllBooks(list);
     })();
   }, []);
 
   useEffect(() => {
     void (async () => {
-      const list = await stockLogRepository.listStockLogs();
+      const list = await container.stockLogUseCase.listStockLogs();
       setAllLogs(list);
     })();
   }, []);
@@ -38,7 +37,7 @@ export default function Admin() {
       targetBook &&
       window.confirm(`「${targetBook?.name}」を削除しますか？`)
     ) {
-      await bookRepository.deleteBook(id);
+      await container.bookUseCase.deleteBook(id);
       setAllBooks(allBooks.filter((book) => book.id !== id));
     }
     setIsLoading(false);
@@ -57,8 +56,13 @@ export default function Admin() {
       return;
     }
     setIsLoading(true);
-    await stockLogRepository.createStockLog({ bookId, quantity, date, memo });
-    const list = await stockLogRepository.listStockLogs();
+    await container.stockLogUseCase.createStockLog({
+      bookId,
+      quantity,
+      date,
+      memo,
+    });
+    const list = await container.stockLogUseCase.listStockLogs();
     setAllLogs(list);
     setIsLoading(false);
     // 入力済みの値をクリア

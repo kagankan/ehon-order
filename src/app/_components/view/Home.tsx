@@ -3,8 +3,8 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 // import { ErrorBoundary } from "react-error-boundary";
+import { container } from "@/di";
 import { Book, formatPrice, taxIn } from "@/domain/book";
-import { bookRepository } from "@/infrastructure/book";
 
 export default function Home() {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     setIsLoading(true);
     void (async () => {
-      const list = await bookRepository.listBooks();
+      const list = await container.bookUseCase.listBooks();
       setAllBooks(list);
       setIsLoading(false);
     })();
