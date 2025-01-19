@@ -49,9 +49,15 @@ export default function Edit() {
       if (bookData) {
         setName(bookData.name);
         setPrice(String(bookData.price));
-        bookData.writtenBy && setWrittenBy(bookData.writtenBy);
-        bookData.illustratedBy && setIllustratedBy(bookData.illustratedBy);
-        bookData.publisher && setPublisher(bookData.publisher);
+        if (bookData.writtenBy) {
+          setWrittenBy(bookData.writtenBy);
+        }
+        if (bookData.illustratedBy) {
+          setIllustratedBy(bookData.illustratedBy);
+        }
+        if (bookData.publisher) {
+          setPublisher(bookData.publisher);
+        }
         if (bookData.imagePath) {
           setImagePath(bookData.imagePath);
           let downloadUrl: string;
@@ -59,7 +65,7 @@ export default function Edit() {
             downloadUrl = await getDownloadURL(
               ref(storage, bookData.imagePath)
             );
-          } catch (error) {
+          } catch {
             downloadUrl = DEFAULT_IMAGE_URL;
           }
           setImageUrl(downloadUrl);
