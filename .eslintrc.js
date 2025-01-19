@@ -20,7 +20,16 @@ module.exports =
       "plugin:jsx-a11y/recommended",
       "prettier",
     ],
-    plugins: ["import"],
+    plugins: ["import", "boundaries"],
+    settings: {
+      "boundaries/elements": [
+        { type: "domain", pattern: "src/domain" },
+        { type: "infrastructure", pattern: "src/infrastructure" },
+        { type: "use-case", pattern: "src/use-case" },
+        { type: "app", pattern: "src/app" },
+        { type: "di", pattern: "src/di" },
+      ],
+    },
     rules: {
       "no-console": "warn",
       "import/order": [
@@ -35,6 +44,30 @@ module.exports =
       ],
       "react/react-in-jsx-scope": "off",
       "@next/next/no-img-element": "off",
+      "boundaries/element-types": [
+        "error",
+        {
+          default: "disallow",
+          rules: [
+            {
+              from: "infrastructure",
+              allow: [["domain"]],
+            },
+            {
+              from: "use-case",
+              allow: [["domain"]],
+            },
+            {
+              from: "app",
+              allow: [["domain"], ["use-case"], ["di"]],
+            },
+            {
+              from: "di",
+              allow: [["infrastructure"], ["use-case"]],
+            },
+          ],
+        },
+      ],
     },
     overrides: [
       {

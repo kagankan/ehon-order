@@ -7,6 +7,34 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
+function listBooksRef(dc) {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  if('_useGeneratedSdk' in dcInstance) {
+    dcInstance._useGeneratedSdk();
+  } else {
+    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
+  }
+  return queryRef(dcInstance, 'ListBooks');
+}
+exports.listBooksRef = listBooksRef;
+exports.listBooks = function listBooks(dc) {
+  return executeQuery(listBooksRef(dc));
+};
+
+function getBookByIdRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  if('_useGeneratedSdk' in dcInstance) {
+    dcInstance._useGeneratedSdk();
+  } else {
+    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
+  }
+  return queryRef(dcInstance, 'GetBookById', inputVars);
+}
+exports.getBookByIdRef = getBookByIdRef;
+exports.getBookById = function getBookById(dcOrVars, vars) {
+  return executeQuery(getBookByIdRef(dcOrVars, vars));
+};
+
 function createBookRef(dcOrVars, vars) {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   if('_useGeneratedSdk' in dcInstance) {
@@ -49,48 +77,6 @@ exports.deleteBook = function deleteBook(dcOrVars, vars) {
   return executeMutation(deleteBookRef(dcOrVars, vars));
 };
 
-function createStockLogRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  if('_useGeneratedSdk' in dcInstance) {
-    dcInstance._useGeneratedSdk();
-  } else {
-    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
-  }
-  return mutationRef(dcInstance, 'CreateStockLog', inputVars);
-}
-exports.createStockLogRef = createStockLogRef;
-exports.createStockLog = function createStockLog(dcOrVars, vars) {
-  return executeMutation(createStockLogRef(dcOrVars, vars));
-};
-
-function listBooksRef(dc) {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  if('_useGeneratedSdk' in dcInstance) {
-    dcInstance._useGeneratedSdk();
-  } else {
-    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
-  }
-  return queryRef(dcInstance, 'ListBooks');
-}
-exports.listBooksRef = listBooksRef;
-exports.listBooks = function listBooks(dc) {
-  return executeQuery(listBooksRef(dc));
-};
-
-function getBookByIdRef(dcOrVars, vars) {
-  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
-  if('_useGeneratedSdk' in dcInstance) {
-    dcInstance._useGeneratedSdk();
-  } else {
-    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
-  }
-  return queryRef(dcInstance, 'GetBookById', inputVars);
-}
-exports.getBookByIdRef = getBookByIdRef;
-exports.getBookById = function getBookById(dcOrVars, vars) {
-  return executeQuery(getBookByIdRef(dcOrVars, vars));
-};
-
 function listStockLogsRef(dc) {
   const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
   if('_useGeneratedSdk' in dcInstance) {
@@ -103,5 +89,19 @@ function listStockLogsRef(dc) {
 exports.listStockLogsRef = listStockLogsRef;
 exports.listStockLogs = function listStockLogs(dc) {
   return executeQuery(listStockLogsRef(dc));
+};
+
+function createStockLogRef(dcOrVars, vars) {
+  const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
+  if('_useGeneratedSdk' in dcInstance) {
+    dcInstance._useGeneratedSdk();
+  } else {
+    console.error('Please update to the latest version of the Data Connect SDK by running `npm install firebase@dataconnect-preview`.');
+  }
+  return mutationRef(dcInstance, 'CreateStockLog', inputVars);
+}
+exports.createStockLogRef = createStockLogRef;
+exports.createStockLog = function createStockLog(dcOrVars, vars) {
+  return executeMutation(createStockLogRef(dcOrVars, vars));
 };
 

@@ -5,7 +5,7 @@ import Head from "next/head";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { AdminLayout } from "@/app/admin/_components/part/AdminLayout";
-import { bookRepository } from "@/infrastructure/book";
+import { container } from "@/di";
 import { storage } from "@/lib/firebase";
 
 const nameId = "name";
@@ -45,7 +45,7 @@ export default function Edit() {
     }
 
     const fetchBook = async () => {
-      const bookData = await bookRepository.getBookById(id);
+      const bookData = await container.bookUseCase.getBookById(id);
       if (bookData) {
         setName(bookData.name);
         setPrice(String(bookData.price));
@@ -97,7 +97,7 @@ export default function Edit() {
       }
 
       // データを保存
-      await bookRepository.updateBook({
+      await container.bookUseCase.updateBook({
         id: id,
         name: name,
         price: Number(price),

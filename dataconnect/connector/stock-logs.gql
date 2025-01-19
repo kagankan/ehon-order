@@ -1,0 +1,21 @@
+# queries
+query ListStockLogs @auth(level: USER) {
+  stockLogs(
+    limit: 9999
+  ) {
+    id
+    book {
+      id
+      name
+    }
+    date
+    quantity
+    memo
+    createdAt
+  }
+}
+
+# mutations
+mutation CreateStockLog($bookId: UUID!, $date: Date!, $quantity: Int!, $memo: String) @auth(level: USER) {
+  stockLog_insert(data: { book: { id: $bookId }, date: $date, quantity: $quantity, memo: $memo })
+}
