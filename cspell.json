@@ -16,6 +16,7 @@
     "signup",
     "stylelint",
     "tailwindcss",
+    "tseslint",
     "vercel"
   ]
 }

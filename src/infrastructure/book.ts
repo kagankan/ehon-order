@@ -16,7 +16,7 @@ const getImageUrl = async (imagePath?: string | null) => {
       throw new Error("No image path");
     }
     return await getDownloadURL(ref(storage, imagePath));
-  } catch (error) {
+  } catch {
     return "https://placehold.jp/ffcd94/bd6e00/150x150.png?text=NO%20IMAGE";
   }
 };
